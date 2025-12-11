@@ -28,3 +28,9 @@ six==1.16.0
 sqlparse==0.5.3
 tzdata==2024.1
 wheel==0.44.0
+
+# Deployment / production dependencies
+gunicorn==20.1.0
+whitenoise==6.4.0
+dj-database-url==1.0.0
+psycopg2-binary==2.9.6

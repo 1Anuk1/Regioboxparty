@@ -1,1 +1,1 @@
-web: RegioBoxPortal.wsgi
+web: gunicorn RegioBoxPortal.wsgi:application --bind 0.0.0.0:$PORT
