@@ -1,0 +1,213 @@
+/* #region Buscador */
+.buscador {
+  max-width: 500px;
+}
+
+.buscador-input {
+  box-shadow: none !important;
+  border: none;
+}
+
+.buscador-input:focus {
+  outline: none;
+  box-shadow: none !important;
+}
+
+.buscador-btn {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/* #endregion */
+
+/* #region Card de Filtros */
+.card-filtros {
+  border-radius: 15px;
+  background: var(--white-color);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
+}
+
+.card-filtros:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.card-filtros .linea-filtros {
+  border: none;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(to right, var(--warm-gray-color) 50%, var(--secondary-color) 50%);
+  background-size: 200% 100%;
+  background-position: left bottom;
+  transition: background-position 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+  border-radius: 2px;
+}
+
+.card-filtros:hover .linea-filtros {
+  background-position: right bottom;
+}
+/* #endregion */
+
+/* #region Checkbox */
+.card-filtros .form-check-input {
+  border: 1px solid var(--brown-color);
+  cursor: pointer;
+}
+
+.card-filtros .form-check-input:checked {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.card-filtros .form-check-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+/* #endregion */
+
+/* #region Cards de Productos */
+.producto-card .card {
+  transition: all 0.25s ease;
+  border: 1px solid var(--light-beige-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.producto-card:hover .card {
+  transform: translateY(-5px);
+  border-color: var(--primary-color);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+  width: 100%;
+  height: 220px;
+  object-fit: contain;
+  object-position: center;
+  padding: 10px;
+  border-radius: 10px;
+}
+/* #endregion */
+
+/* #region Modales */
+.modal-prod {
+  max-width: 700px;
+}
+
+.modal-content-prod {
+  height: 300px;
+}
+
+.modal-precio {
+  top: 10px;
+  left: 10px;
+  background: var(--primary-color);
+  color: var(--white-color);
+  padding: 5px 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+.modal-body > .col-md-5 {
+  margin-right: 15px;
+}
+
+.col-md-5 { 
+  position: relative;
+  overflow: hidden;
+}
+
+.zoom-container {
+  width: 100%;
+  height: 100%;
+  min-height: 160px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: zoom-in;
+  transition: background-size .25s ease, background-position .12s linear;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 0;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0,0,0,0);
+  white-space: nowrap; border: 0;
+}
+
+.btn-secondary {
+  background-color: var(--warm-gray-color);
+  border-color: var(--warm-gray-color);
+}
+
+.btn-secondary:hover {
+  background-color: var(--gray-brown-color);
+  border-color: var(--gray-brown-color);
+}
+
+.btn-outline-secondary {
+  border-color: var(--warm-gray-color);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--warm-gray-color);
+  border-color: var(--warm-gray-color);
+}
+
+.btn-close {
+  z-index: 1055;
+  cursor: pointer;
+}
+
+.btn-close:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+#modalConfirmacion .material-symbols-rounded {
+  font-size: 90px;
+  color: #5bdd61;
+}
+/* #endregion */
+
+/* #region Paginación */
+#paginacion .page-item .page-link {
+  border-radius: 50%;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 3px;
+  transition: all 0.3s;
+}
+
+#paginacion .page-item.active .page-link {
+  background-color: var(--primary-color);
+  color: var(--white-color);
+  border-color: var(--primary-color);
+}
+
+#paginacion .page-item .page-link:hover {
+  background-color: var(--secondary-color);
+  color: var(--white-color);
+  border-color: var(--secondary-color);
+}
+/* #endregion */
+
+/* #region Medias */
+@media (max-width: 767px) {
+  .modal-content-prod {
+    height: auto;
+  }
+}
+/* #endregion */

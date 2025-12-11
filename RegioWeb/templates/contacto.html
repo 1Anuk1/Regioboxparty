@@ -1,0 +1,123 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% block title %}Contacto{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regioweb/css/nosotros-contacto.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Contáctanos -->
+<div class="container my-5 text-center">
+    <div class="banner text-center text-white py-3">
+        <h1 class="m-0">Contáctanos</h1>
+    </div>
+</div>
+
+<div class="bg-light py-5 text-center">
+    <div class="container">
+        <h3>Comunícate con Nosotros</h3>
+        <div class="row">
+            <!-- Columna 1-->
+            <div class="col-3 text-center container border rounded mt-5 p-3">
+                <h1><i class="fa-solid fa-phone mt-4 mb-3"></i></h1>
+                <h5>+987-654-321</h5>
+            </div>
+            <!-- /Columna 1-->
+
+            <!-- Columna 2-->
+            <div class="col-3 text-center container border rounded mt-5 p-3">
+                <h1><i class="fa-solid fa-envelope mt-4 mb-3"></i></h1>
+                <h5>regioboxparty@gmail.com</h5>
+            </div>
+            <!-- /Columna 2-->
+
+            <!-- Columna 3-->
+            <div class="col-3 text-center container border rounded mt-5 p-3">
+                <h1><i class="fa-brands fa-square-whatsapp mt-4 mb-3"></i></h1>
+                <h5>+123-456-789</h5>
+            </div>
+            <!-- /Columna 3-->
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row align-items-center">
+        <h3 class="mb-4">Estamos ubicados en:</h3>
+        <iframe
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1797.1673186516148!2d-100.338874!3d25.726445!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8662942e02bec5eb%3A0x317a42759a7c75c1!2sJos%C3%A9%20L%C3%B3pez%20Collado%202233%2C%20Ferrocarrilera%2C%2064250%20Monterrey%2C%20N.L.!5e0!3m2!1ses-419!2smx!4v1759722603254!5m2!1ses-419!2smx"
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">"
+        </iframe>
+    </div>
+</div>
+
+<div class="py-5">
+    <div class="container-fluid px-0">
+        <form id="formContacto" data-url="{% url 'regioweb:contacto_enviar' %}" class="row g-4 justify-content-center">
+            <h3 class="text-center mb-4">Llene el formulario y le contactaremos.</h3>
+            <div class="col-md-5">
+                <div class="form-group mb-3">
+                    <label for="nombre" class="mb-2">Nombre Completo*</label>
+                    <input id="nombre" name="nombre" class="form-control" type="text" placeholder="Ej. Juan Pérez" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="correo" class="mb-2">Correo Electrónico*</label>
+                    <input id="correo" name="correo" class="form-control" type="email" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono" class="mb-2">Teléfono</label>
+                    <input id="telefono" name="telefono" class="form-control" type="tel" placeholder="Opcional">
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Estado*</label>
+                        <select name="estado" id="agregar_estado" class="form-select" required></select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ciudad / Municipio*</label>
+                        <select name="ciudad" id="agregar_ciudad" class="form-select" required></select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="mensaje" class="mb-2">¿Cómo podemos ayudarte?*</label>
+                    <textarea id="mensaje" name="mensaje" class="form-control" placeholder="Describe tu solicitud." required></textarea>
+                </div>
+            </div>
+            <br><br>
+            <div class="col-md-10 d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary btn-lg btn-wide mb-3">Enviar</button>
+            </div>
+
+            <div id="alertErrores" class="w-50"></div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalContacto" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg text-center p-4">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <span id="modalIcon" class="material-symbols-rounded">check_circle</span>
+                </div>
+                <h4 id="modalTitulo" class="mb-3">¡Mensaje enviado!</h4>
+                <p id="modalMensaje" class="mb-4 text-center">Gracias por contactarnos. Te responderemos pronto.</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'regioweb/js/contacto.js' %}"></script>
+<!-- Scripts para los selects -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="{% static 'regioweb/js/municipios.js' %}"></script>
+<script src="{% static 'regioweb/js/select_estados.js' %}"></script>
+{% endblock %}

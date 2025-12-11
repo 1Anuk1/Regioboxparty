@@ -1,0 +1,145 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% block title %}Inicio de Sesión{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regioweb/css/login-registro.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid h-custom">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-md-8 col-lg-6 col-xl-4 mt-lg-5 pt-lg-3 mb-lg-4 order-2 order-md-1">
+            <div class="d-flex flex-row align-items-center justify-content-center justify-content-lg-start">
+                <h1 class="fw-bold text-danger mb-0 me-3">Registro</h1>
+            </div>
+            <div class="divider d-flex align-items-center my-4"></div>
+
+            <form method="POST">
+                {% csrf_token %}
+                <!-- Nombre y Apellido -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingNombre" name="nombre"
+                                placeholder="Ingresa tu nombre"
+                                value="{% if not registro_exitoso %}{{ nombre|default:'' }}{% endif %}" required />
+                            <label for="floatingNombre" class="form-label">Nombre(s)</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingApellido" name="apellido"
+                                placeholder="Ingresa tu apellido"
+                                value="{% if not registro_exitoso %}{{ apellido|default:'' }}{% endif %}" required />
+                            <label for="floatingApellido" class="form-label">Apellidos</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-floating mb-4">
+                    <input type="email" class="form-control" id="floatingEmail" name="email"
+                        placeholder="Ingresa un email válido"
+                        value="{% if not registro_exitoso %}{{ correo|default:'' }}{% endif %}" required />
+                    <label for="floatingEmail" class="form-label">Correo Electrónico</label>
+                </div>
+
+                <!-- Telefono -->
+                <div class="form-floating mb-4">
+                    <input type="tel" class="form-control" id="floatingTelefono" name="telefono"
+                        placeholder="Ingresa tu teléfono"
+                        value="{% if not registro_exitoso %}{{ telefono|default:'' }}{% endif %}" />
+                    <label for="floatingTelefono" class="form-label">Teléfono</label>
+                </div>
+
+                <!-- Contraseña y Confirmar Contraseña -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="floatingPassword" name="password"
+                                placeholder="Ingresa tu contraseña" required />
+                            <label for="floatingPassword" class="form-label">Contraseña</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="floatingConfirmPass" name="confirmpass"
+                                placeholder="Confirma tu contraseña" required />
+                            <label for="floatingConfirmPass" class="form-label">Confirmar Contraseña</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <!-- Checkbox -->
+                    <div class="form-check mb-0">
+                        <input class="form-check-input me-2" type="checkbox" value="on" id="terms-cond"
+                            name="terms-cond" required />
+                        <label class="form-check-label" for="terms-cond">Estoy de acuerdo con los <a
+                                href="{% url 'regioweb:terminos_condiciones' %}"><strong>Términos y
+                                    Condiciones</strong></a>.</label>
+                    </div>
+                </div>
+
+                <div class="text-center text-lg-start mt-4">
+                    <button class="btn btn-danger btn-lg btn-ripple px-4">Registrarse</button>
+                    <p class="fs-6 fw-normal mt-2 pt-2 mb-0"> ¿Ya tienes una cuenta? <a
+                            href="{% url 'regioweb:login' %}" class="link-danger text-decoration-none fw-bold">Iniciar
+                            Sesión</a></p>
+
+                    <!-- Alerta de errores -->
+                    {% if errores %}
+                    <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                        <strong>Errores:</strong>
+                        <ul class="mb-0">
+                            {% for error in errores %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+        <div class="col-md-9 col-lg-6 col-xl-5 order-1 order-md-2">
+            <img src="{% static 'regioweb/img/img.png' %}" class="img-fluid" alt="Login image">
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="registroModalLabel"><i class="fas fa-user-check"></i>&nbsp;&nbsp; Registro
+                    Exitoso</h5>
+                <button type="button" class="btn-close registro-close" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <h5><strong>¡Tu cuenta se ha registrado correctamente!</strong></h5><br>
+                Ahora puedes iniciar sesión con tu correo: <span class="correo-underline">{{ correo }}</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cerrar</button>
+                <a href="{% url 'regioweb:login' %}" class="btn btn-danger">Iniciar Sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if registro_exitoso %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var registroModal = new bootstrap.Modal(document.getElementById('registroModal'));
+        registroModal.show();
+    });
+</script>
+{% endif %}
+
+
+
+{% endblock %}

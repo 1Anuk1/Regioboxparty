@@ -1,0 +1,100 @@
+/* #region KPI Cards */
+.kpi-card {
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--white-color);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    position: relative;
+    height: 150px;
+}
+
+.kpi-card:hover {
+    transform: translateY(-3px);
+}
+
+.kpi-total-clientes {
+    background-color: var(--secondary-color);
+}
+
+.kpi-clientes-mes {
+    background-color: var(--orange-color);
+}
+
+.kpi-total-cot {
+    background-color: var(--brown-color);
+}
+
+.kpi-cot-aprob {
+    background-color: var(--accent-color);
+}
+
+.kpi-card i {
+    font-size: 2rem;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    opacity: 0.3;
+}
+
+.kpi-progreso {
+    width: 80%;
+    height: 6px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-top: 10px;
+}
+
+.kpi-progreso-linea {
+    height: 100%;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+/* #endregion */
+
+/* #region Cards Gráficos */
+.card {
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card canvas {
+    height: 180px !important;
+    max-height: 180px;
+}
+
+.small-chart-card canvas {
+    height: 130px !important;
+    max-height: 130px;
+}
+
+/* Cotizaciones por origen estilo indicador + gráfico */
+.cot-origen-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cot-origen-indicators {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cot-origen-indicators span {
+    display: flex;
+    justify-content: space-between;
+    width: 100px;
+    font-weight: bold;
+}
+
+/* dashboard.css */
+#cotOrigenChart {
+    height: 180px !important;
+    width: auto !important;
+}
+/* #endregion */

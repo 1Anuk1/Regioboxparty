@@ -1,0 +1,50 @@
+.banner-img {
+    height: auto; 
+    z-index: 2;
+}
+
+.banner-txt {
+    top: 90%; 
+    transform: translateX(-50%); 
+    z-index: 3; 
+    width: 90%; 
+    max-width: 800px;
+}
+
+.form-label {
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+button:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-white {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border: 1px solid var(--white-color);
+}
+
+.btn-close.registro-close:hover,
+.btn-close.registro-close:focus,
+.btn-white:hover,
+.btn-white:focus {
+    background-color: var(--light-beige-color) !important;
+    border-color: var(--light-beige-color) !important;
+}
+
+.link-regreso {
+    color: var(--black-color);
+    text-decoration: none;
+}
+
+.link-regreso:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+.modal-title, .modal-title i {
+    color: var(--secondary-color);
+}

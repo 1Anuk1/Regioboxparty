@@ -1,0 +1,498 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Mi Cuenta{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regioweb/css/usuario.css' %}">
+{% endblock %}
+
+{% block content %}
+<div>
+    <div class="container my-5 text-center">
+        <div class="banner text-center text-white py-3">
+            <h1 class="m-0">Mi Cuenta</h1>
+        </div>
+    </div>
+
+    <div class="container pb-5">
+        <div class="row">
+            <!-- Contenido principal -->
+            <div class="col-12">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="row g-0">
+                            <!-- Barra lateral -->
+                            <div class="col-lg-3 border-end d-flex flex-column">
+                                <div class="p-4 flex-grow-1">
+                                    <div class="nav flex-column nav-pills">
+                                        <a class="nav-link active" href="#info-personal" data-bs-toggle="pill">
+                                            <i class="fas fa-user me-2" aria-hidden="true"></i>Información personal
+                                        </a>
+                                        <a class="nav-link" href="#direcciones" data-bs-toggle="pill">
+                                            <i class="fas fa-map-marker-alt me-2" aria-hidden="true"></i>Direcciones
+                                        </a>
+                                        <a class="nav-link" href="#cotizaciones" data-bs-toggle="pill">
+                                            <i class="fas fa-file-alt me-2" aria-hidden="true"></i>Cotizaciones
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- Botón de cerrar sesión siempre abajo -->
+                                <div class="p-4 mt-auto">
+                                    <form method="POST" action="{% url 'regioweb:logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-white w-100">
+                                            <i class="fas fa-sign-out-alt me-2" aria-hidden="true"></i>Cerrar sesión
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <!-- Área de contenido -->
+                            <div class="col-lg-9">
+                                <div class="p-4">
+                                    <div class="tab-content">
+                                        <!-- Información personal -->
+                                        <div class="tab-pane fade show active" id="info-personal">
+                                            <div class="mb-4 d-flex justify-content-between align-items-start">
+                                                <h5 class="mb-0">Información personal</h5>
+                                            </div>
+
+                                            <!-- Alertas -->
+                                            <div class="mb-3">
+                                                <!-- Errores de validación (lista de errores) -->
+                                                {% if errores %}
+                                                <div class="alert alert-danger alert-dismissible fade show mt-3"
+                                                    role="alert">
+                                                    <strong>Errores:</strong>
+                                                    <ul class="mb-0">
+                                                        {% for error in errores %}
+                                                        <li>{{ error }}</li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                {% endif %}
+
+                                                <!-- Mensaje de éxito -->
+                                                {% if messages %}
+                                                {% for m in messages %}
+                                                {% if 'usuario' in m.tags %}
+                                                <div class="alert alert-success alert-dismissible fade show mt-3"
+                                                    role="alert">
+                                                    {{ m }}
+                                                    <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                                {% endif %}
+                                            </div>
+
+                                            <!-- Modo VISTA: muestra los labels (por defecto visible) -->
+                                            <div id="info-vista" class="mb-3">
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label text-muted">Nombre(s):</label>
+                                                        <div class="fw-bold text-value" id="vista-nombre">
+                                                            {{ cliente.nombre }}</div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label text-muted">Apellido(s):</label>
+                                                        <div class="fw-bold text-value" id="vista-apellido">
+                                                            {{ cliente.apellido }}</div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label text-muted">Correo electrónico:</label>
+                                                        <div class="fw-bold text-value" id="vista-correo">
+                                                            {{ cliente.correo }}</div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label text-muted">Teléfono:</label>
+                                                        <div class="fw-bold text-value" id="vista-telefono">
+                                                            {{ cliente.telefono|default:'-' }}</div>
+                                                    </div>
+
+                                                    <div class="col-12 text-end mt-3">
+                                                        <button id="btn-modificar" class="btn btn-danger">Modificar
+                                                            datos</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Modo EDICIÓN: formulario oculto inicialmente -->
+                                            <div id="info-edicion" class="mb-3" style="display:none;">
+                                                <form method="POST"
+                                                    action="{% url 'regioweb:usuario_actualizar_info' %}">
+                                                    {% csrf_token %}
+                                                    <div class="row g-3">
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Nombre(s)</label>
+                                                            <input type="text" name="nombre" id="input-nombre"
+                                                                class="form-control" value="{{ cliente.nombre }}"
+                                                                required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Apellido(s)</label>
+                                                            <input type="text" name="apellido" id="input-apellido"
+                                                                class="form-control" value="{{ cliente.apellido }}"
+                                                                required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Correo electrónico</label>
+                                                            <input type="email" name="correo" id="input-correo"
+                                                                class="form-control" value="{{ cliente.correo }}"
+                                                                required>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="form-label">Teléfono</label>
+                                                            <input type="tel" name="telefono" id="input-telefono"
+                                                                class="form-control" value="{{ cliente.telefono }}">
+                                                        </div>
+
+                                                        <!-- Checkbox para cambiar contraseña -->
+                                                        <div class="col-12 mt-3">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input" type="checkbox"
+                                                                    id="chk-cambiar-contrasena"
+                                                                    name="cambiar_contrasena">
+                                                                <label class="form-check-label"
+                                                                    for="chk-cambiar-contrasena">Modificar
+                                                                    contraseña</label>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Bloque de contraseñas oculto inicialmente -->
+                                                        <div id="bloque-contrasenas" style="display:none;"
+                                                            class="row g-3 mt-1">
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Contraseña Actual</label>
+                                                                <input type="password" name="contrasena-actual"
+                                                                    id="contrasena-actual" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Nueva Contraseña</label>
+                                                                <input type="password" name="nueva-contrasena"
+                                                                    id="nueva-contrasena" class="form-control">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <label class="form-label">Confirmar Contraseña</label>
+                                                                <input type="password" name="confirmar-contrasena"
+                                                                    id="confirmar-contrasena" class="form-control">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-12 text-end mt-3">
+                                                            <button type="button" id="btn-cancelar"
+                                                                class="btn btn-white me-2">Cancelar</button>
+                                                            <button type="submit" class="btn btn-danger">Guardar
+                                                                cambios</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+                                        <!-- Direcciones -->
+                                        <div class="tab-pane fade" id="direcciones">
+                                            <div class="mb-4 d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0">Direcciones</h5>
+                                            </div>
+
+                                            {% if direcciones %}
+                                            <div class="list-group">
+                                                {% for dir in direcciones %}
+                                                <div class="list-group-item d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">
+                                                            {% if dir.dir_principal %}
+                                                            <span class="badge bg-success me-2">Principal</span>
+                                                            {% endif %}
+                                                            {{ dir.calle }} {{ dir.numero }}, {{ dir.colonia }}
+                                                        </div>
+                                                        <div class="text-muted small">
+                                                            {{ dir.ciudad }} · {{ dir.estado|title }} · CP
+                                                            {{ dir.codigo_postal }} · México
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="btn-group ms-3" role="group" aria-label="Acciones de Dirección">
+                                                        {% if not dir.dir_principal %}
+                                                        <form method="POST" action="{% url 'regioweb:usuario_direccion_principal' dir.idDireccion %}" class="d-inline">
+                                                            {% csrf_token %}
+                                                            <button type="submit" class="btn btn-outline-success btn-sm" title="Colocar como principal">
+                                                                <i class="fas fa-star"></i>
+                                                            </button>
+                                                        </form>
+                                                        {% endif %}
+
+                                                        <button class="btn btn-outline-secondary btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalEditarDireccion"
+                                                            data-id="{{ dir.idDireccion }}"
+                                                            data-calle="{{ dir.calle|escape }}"
+                                                            data-numero="{{ dir.numero|escape }}"
+                                                            data-colonia="{{ dir.colonia|escape }}"
+                                                            data-ciudad="{{ dir.ciudad|escape }}"
+                                                            data-estado="{{ dir.estado|escape }}"
+                                                            data-cp="{{ dir.codigo_postal|escape }}"
+                                                            data-principal="{{ dir.dir_principal|yesno:'True,False' }}"
+                                                            data-url="{% url 'regioweb:usuario_editar_direccion' dir.idDireccion %}">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+
+                                                        <button class="btn btn-outline-danger btn-sm"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalEliminarDireccion"
+                                                            data-id="{{ dir.idDireccion }}"
+                                                            data-url="{% url 'regioweb:usuario_eliminar_direccion' dir.idDireccion %}">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                            {% else %}
+                                            <div class="alert alert-info">
+                                                No tienes direcciones guardadas.
+                                            </div>
+                                            {% endif %}
+
+                                            <!-- Botón de agregar dirección -->
+                                            <div class="d-flex justify-content-center mt-3">
+                                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalAgregarDireccion">
+                                                    <i class="fas fa-plus me-1"></i> Agregar dirección
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Cotizaciones -->
+                                        <div class="tab-pane fade" id="cotizaciones">
+                                            <div class="mb-4 d-flex justify-content-between align-items-center">
+                                                <h5 class="mb-0">Cotizaciones</h5>
+                                            </div>
+
+                                            {% if cotizaciones.exists %}
+                                                <div class="accordion" id="accordionCotizaciones">
+                                                    {% for cot in cotizaciones %}
+                                                    <div class="accordion-item mb-2 shadow-sm rounded">
+                                                        <h2 class="accordion-header" id="heading{{ cot.idCotizacion }}">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ cot.idCotizacion }}" aria-expanded="false" aria-controls="collapse{{ cot.idCotizacion }}">
+                                                                Cotización #{{ cot.idCotizacion }} - {{ cot.fecha_solicitud|date:"d/m/Y H:i" }} - {{ cot.get_tipo_entrega_display }}
+                                                            </button>
+                                                        </h2>
+                                                        <div id="collapse{{ cot.idCotizacion }}" class="accordion-collapse collapse" aria-labelledby="heading{{ cot.idCotizacion }}" data-bs-parent="#accordionCotizaciones">
+                                                            <div class="accordion-body">
+                                                                <p><strong>Dirección:</strong> 
+                                                                    {% if cot.calle or cot.numero or cot.colonia or cot.codigo_postal or cot.ciudad or cot.estado_domicilio %}
+                                                                        {{ cot.calle }} {{ cot.numero }}, {{ cot.colonia }}, {{ cot.codigo_postal }} {{ cot.ciudad }}, {{ cot.estado_domicilio|title }}.
+                                                                    {% else %}
+                                                                        Recogida en tienda - José López Collado 2233, Ferrocarrilera, 64250 Monterrey, N.L.
+                                                                    {% endif %}
+                                                                </p>
+                                                                <div class="d-flex justify-content-between align-items-center">
+                                                                    <p class="mb-0"><strong>Total estimado:</strong> ${{ cot.total_estimado|floatformat:2|intcomma|default:"0.00" }} MXN</p>
+                                                                    <a href="{% url 'regioweb:descargar_cotizacion_pdf' cot.idCotizacion %}" class="btn btn-danger">
+                                                                        <i class="far fa-file-pdf"></i> Descargar PDF
+                                                                    </a>
+                                                                </div>
+                                                                <hr>
+                                                                <ul class="list-group">
+                                                                    {% for detalle in cot.detalles.all %}
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {{ detalle.producto.nombre }} (x{{ detalle.cantidad }})
+                                                                        <span>${{ detalle.precio_estimado|floatformat:2|intcomma|default:"0.00" }} MXN</span>
+                                                                    </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                                {% if cot.comentarios %}
+                                                                <p class="mt-2"><strong>Comentarios:</strong> {{ cot.comentarios }}</p>
+                                                                {% endif %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% endfor %}
+                                                </div>
+                                            {% else %}
+                                                <div class="alert alert-info">
+                                                    No tienes cotizaciones solicitadas todavía.
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Área de contenido -->
+                        </div>
+                    </div>
+                </div>  
+            </div>
+            <!-- /Contenido principal -->
+        </div>
+    </div>
+</div>
+
+<!-- Modales -->
+
+<!-- Modal: Agregar Dirección -->
+<div class="modal fade" id="modalAgregarDireccion" tabindex="-1" aria-labelledby="modalAgregarDireccionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" action="{% url 'regioweb:usuario_agregar_direccion' %}">
+                {% csrf_token %}
+                <div class="modal-header d-flex align-items-center justify-content-between">
+                    <h5 class="modal-title d-flex align-items-center mb-0" id="modalAgregarDireccionLabel">
+                        <span class="material-symbols-rounded">add_location_alt</span>&nbsp; Agregar dirección
+                    </h5>
+                    <button type="button" class="btn-close direccion-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor de mensajes --> 
+                    <div id="agregarDireccionAlert" class="alert d-none mx-1 mt-2"></div>
+
+                    <!-- Inputs -->
+                    <div class="mb-3">
+                        <label class="form-label">Calle</label>
+                        <input name="calle" id="agregar_calle" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número</label>
+                        <input name="numero" id="agregar_numero" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Colonia</label>
+                        <input name="colonia" id="agregar_colonia" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado</label>
+                            <select name="estado" id="agregar_estado" class="form-select" required></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ciudad / Municipio</label>
+                            <select name="ciudad" id="agregar_ciudad" class="form-select" required></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Código postal</label>
+                            <input name="codigo_postal" id="agregar_codigo_postal" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">País</label>
+                            <input name="pais" class="form-control" value="México" disabled>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input name="principal" class="form-check-input" type="checkbox" id="principalAgregar">
+                        <label class="form-check-label" for="principalAgregar">Marcar como dirección principal</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Guardar dirección</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Editar Dirección -->
+<div class="modal fade" id="modalEditarDireccion" tabindex="-1" aria-labelledby="modalEditarDireccionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="formEditarDireccion">
+                {% csrf_token %}
+                <div class="modal-header d-flex align-items-center justify-content-between">
+                    <h5 class="modal-title d-flex align-items-center mb-0" id="modalEditarDireccionLabel">
+                        <span class="material-symbols-rounded">edit_location_alt</span>&nbsp; Editar dirección
+                    </h5>
+                    <button type="button" class="btn-close direccion-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor de mensajes -->
+                    <div id="editarDireccionAlert" class="alert d-none mx-1 mt-2"></div>
+                    <input type="hidden" name="id_dir" id="editar_id_dir">
+
+                    <!-- Inputs -->
+                    <div class="mb-3">
+                        <label class="form-label">Calle</label>
+                        <input name="calle" id="editar_calle" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Número</label>
+                        <input name="numero" id="editar_numero" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Colonia</label>
+                        <input name="colonia" id="editar_colonia" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Estado</label>
+                            <select name="estado" id="editar_estado" class="form-select" required></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Ciudad / Municipio</label>
+                            <select name="ciudad" id="editar_ciudad" class="form-select" required></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Código postal</label>
+                            <input name="codigo_postal" id="editar_codigo_postal" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">País</label>
+                            <input name="pais" class="form-control" value="México" disabled>
+                        </div>
+                    </div>
+                    <div class="form-check">
+                        <input name="principal" class="form-check-input" type="checkbox" id="principalEditar">
+                        <label class="form-check-label" for="principalEditar">Marcar como dirección principal</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Guardar cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Eliminar Dirección (confirmación) -->
+<div class="modal fade" id="modalEliminarDireccion" tabindex="-1" aria-labelledby="modalEliminarDireccionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form method="POST" id="formEliminarDireccion">
+                {% csrf_token %}
+                <div class="modal-header d-flex align-items-center justify-content-between">
+                    <h5 class="modal-title d-flex align-items-center mb-0" id="modalEliminarDireccionLabel">
+                        <span class="material-symbols-rounded">wrong_location</span>&nbsp; Eliminar dirección
+                    </h5>
+                    <button type="button" class="btn-close direccion-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <h6>¿Estás seguro de que deseas eliminar esta dirección?</h6>
+                    <input type="hidden" name="id_direccion" id="delete_id_direccion">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts de manejo -->
+<script src="{% static 'regioweb/js/usuario_actualizar_info.js' %}"></script>
+<script src="{% static 'regioweb/js/usuario_direccion.js' %}"></script>
+
+<!-- Scripts para los selects -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="{% static 'regioweb/js/municipios.js' %}"></script>
+<script src="{% static 'regioweb/js/select_estados.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends 'regiocrm/plantilla.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regiocrm/css/modulos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="titulo-container text-center">
+        <h2 class="titulo mt-1 mb-4">Clientes</h2>
+    </div>
+
+    <div class="row g-3">
+        <!-- Añadir cliente -->
+        <div class="col-12 col-lg-3 px-2">
+            <div class="accordion" id="accordionAddCliente">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAdd">
+                        <button class="accordion-button {% if errores %}{% else %}collapsed{% endif %}" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseAdd"
+                            aria-expanded="{% if errores %}true{% else %}false{% endif %}" aria-controls="collapseAdd">
+                            <i class="fas fa-user-plus"></i>&nbsp;&nbsp;Añadir Cliente
+                        </button>
+                    </h2>
+                    <div id="collapseAdd" class="accordion-collapse collapse {% if errores %}show{% endif %}"
+                        aria-labelledby="headingAdd" data-bs-parent="#accordionAddCliente">
+                        <div class="accordion-body">
+                            <!-- Alerta de errores -->
+                            {% if errores %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                <strong>Errores:</strong>
+                                <ul class="mb-0">
+                                    {% for error in errores %}
+                                    <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                            {% endif %}
+
+                            <form method="POST">
+                                {% csrf_token %}
+                                <div class="mb-2"><input type="text" class="form-control" name="nombre"
+                                        placeholder="Nombre" value="{{ form_data.nombre|default_if_none:'' }}" required>
+                                </div>
+                                <div class="mb-2"><input type="text" class="form-control" name="apellido"
+                                        placeholder="Apellido" value="{{ form_data.apellido|default_if_none:'' }}"
+                                        required></div>
+                                <div class="mb-2"><input type="email" class="form-control" name="correo"
+                                        placeholder="Correo Electrónico"
+                                        value="{{ form_data.correo|default_if_none:'' }}" required></div>
+                                <div class="mb-2"><input type="text" class="form-control" name="telefono"
+                                        placeholder="Teléfono" value="{{ form_data.telefono|default_if_none:'' }}">
+                                </div>
+                                <hr>
+                                <button type="submit" class="btn btn-primary mt-2 w-100">Añadir Cliente</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de clientes -->
+        <div class="col-12 col-lg-9 px-2">
+            <div class="mb-3 buscador-wrapper">
+                <div class="position-relative">
+                    <input type="text" id="buscadorClientes" class="form-control buscador-input" 
+                        placeholder="Buscar clientes por nombre, apellido o correo...">
+                    <i class="fas fa-search buscador-icon"></i>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle" id="tablaClientes">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Apellido</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Origen</th>
+                            <th>Activo</th>
+                            <th>Registrado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td class="text-center fw-bold">#{{ cliente.idCliente }}</td>
+                            <td>{{ cliente.nombre }}</td>
+                            <td>{{ cliente.apellido }}</td>
+                            <td>{{ cliente.correo }}</td>
+                            <td class="text-center">{{ cliente.telefono|default:"-" }}</td>
+                            <td class="text-center">
+                                {% if cliente.origen == 'crm' %}
+                                <span class="badge bg-primary">CRM</span>
+                                {% elif cliente.origen == 'web' %}
+                                <span class="badge bg-secondary">WEB</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if cliente.activo %}
+                                <span class="badge bg-activo">ACTIVO</span>
+                                {% else %}
+                                <span class="badge bg-inactivo">INACTIVO</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">{{ cliente.fecha_registro|date:"d/m/Y H:i" }}</td>
+                            <td class="text-center">
+                                <a href="#" class="btn btn-sm btn-warning btn-editar" data-bs-toggle="modal"
+                                    data-bs-target="#editarModal" data-id="{{ cliente.idCliente }}"
+                                    data-nombre="{{ cliente.nombre }}" data-apellido="{{ cliente.apellido }}"
+                                    data-correo="{{ cliente.correo }}"
+                                    data-telefono="{{ cliente.telefono|default:'' }}">
+                                    <i class="fas fa-user-pen"></i>
+                                </a>
+                                {% if cliente.activo %}
+                                <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#accionModal"
+                                    data-nombre="{{ cliente.nombre }} {{ cliente.apellido }}"
+                                    data-id="{{ cliente.idCliente }}" data-accion="delete">
+                                    <i class="fas fa-user-xmark"></i>
+                                </button>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#accionModal"
+                                    data-nombre="{{ cliente.nombre }} {{ cliente.apellido }}"
+                                    data-id="{{ cliente.idCliente }}" data-accion="activate">
+                                    <i class="fas fa-user-check"></i>
+                                </button>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center text-muted pt-3 pb-1">
+                                <p>No hay clientes registrados.</p>
+                            </td>
+                        </tr>
+                        {% endfor %} 
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            <nav class="mt-3 mb-0 pb-0">
+                <ul class="pagination justify-content-center flex-wrap gap-2 mb-0">
+                    {% if clientes.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ clientes.previous_page_number }}">Anterior</a>
+                    </li>
+                    {% endif %}
+                    {% for num in clientes.paginator.page_range %}
+                    <li class="page-item {% if clientes.number == num %}active{% endif %}">
+                        <a class="page-link px-3 py-2" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+                    {% if clientes.has_next %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ clientes.next_page_number }}">Siguiente</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación de cliente añadido -->
+<div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="añadirModalLabel"><i class="fas fa-user-plus"></i>&nbsp;&nbsp; Cliente Añadido</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="añadirMensaje">El cliente se ha añadido correctamente.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn modal-btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de edición -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="editarModalLabel"><i class="fas fa-user-pen"></i>&nbsp;&nbsp; Editar Cliente</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <div id="editarAlertContainer"></div>
+                <form id="editarForm" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cliente_id" id="editarClienteId">
+                    <div class="mb-2"><input type="text" class="form-control" name="nombre" id="editarNombre" placeholder="Nombre" required></div>
+                    <div class="mb-2"><input type="text" class="form-control" name="apellido" id="editarApellido" placeholder="Apellido" required></div>
+                    <div class="mb-2"><input type="email" class="form-control" name="correo" id="editarCorreo" placeholder="Correo electrónico" required></div>
+                    <div class="mb-2"><input type="text" class="form-control" name="telefono" id="editarTelefono" placeholder="Teléfono"></div>
+                    <div class="modal-footer px-0">
+                        <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn modal-btn-danger"><i class="fas fa-save"></i>&nbsp; Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal único para activar o eliminar -->
+<div class="modal fade" id="accionModal" tabindex="-1" aria-labelledby="accionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="accionModalLabel"><i class="fas fa-user-gear"></i>&nbsp;&nbsp; Confirmar Acción</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="accionMensaje">¿Estás seguro de realizar esta acción?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn modal-btn-danger" id="accionBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'regiocrm/js/clientes.js' %}"></script>
+{% endblock %}

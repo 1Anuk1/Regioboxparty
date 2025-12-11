@@ -1,0 +1,207 @@
+/* #region Carrusel */
+#hero-carousel {
+  background: linear-gradient(135deg, var(--secondary-color) 50%, var(--light-gray) 50%);
+}
+
+#hero-carousel .carousel-item .col-lg-6 {
+  padding-left: 9rem;
+}
+
+#hero-carousel .carousel-indicators li {
+  list-style: none;
+  margin-top: -50px;
+  background-color: var(--primary-color);
+}
+
+#hero-carousel .carousel-control-next i,
+#hero-carousel .carousel-control-prev i {
+  font-size: 2.8em !important;
+}
+
+#hero-carousel .carousel-control-next i {
+  color: var(--primary-color) !important;
+}
+
+#hero-carousel .carousel-control-prev i {
+  color: var(--light-beige-color) !important;
+}
+
+.carousel-item-inicio {
+  height: 700px;
+}
+/* #endregion */
+
+/* #region Cualidades */
+.icon-cualidad .icon-cualidad-icon .material-symbols-rounded {
+  font-size: 33px;
+  color: var(--primary-color);
+}
+/* #endregion */
+
+/* #region Más Cotizados */
+.producto {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.producto-img {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+}
+
+.card-body {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.producto .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.producto:hover .overlay {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.icon-carrito {
+  width: 60px;
+  height: 60px;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  color: var(--white-color);
+}
+
+.producto:hover .icon-carrito:hover {
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.btn-custom {
+  border-radius: 50px;
+  padding: 10px 30px;
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#modalConfirmacion .material-symbols-rounded {
+  font-size: 90px;
+  color: #5bdd61;
+}
+
+.btn-outline-secondary {
+  border-color: var(--warm-gray-color);
+}
+
+.btn-outline-secondary:hover {
+  background-color: var(--warm-gray-color);
+  border-color: var(--warm-gray-color);
+}
+/* #endregion */
+
+/* #region Nosotros */
+.inicio-nosotros {
+  background-color: var(--light-gray);
+}
+
+.img-nosotros img {
+  max-width: 600px;
+  width: 100%;
+  height: auto;
+}
+/* #endregion */
+
+/* #region Testimonios */
+.tarjeta-testimonio {
+  background: linear-gradient(165deg, var(--light-gray), var(--light-beige-color));
+  border-radius: 20px;
+  transition: transform 0.3s ease;
+}
+
+.tarjeta-testimonio:hover {
+  transform: translateY(-5px);
+}
+
+.icon-testimonio {
+  font-size: 4rem;
+  color: var(--primary-color);
+  opacity: 0.2;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid var(--white-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-control-prev.anterior,
+.carousel-control-next.siguiente {
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carousel-control-prev.anterior {
+  left: -20px;
+}
+
+.carousel-control-next.siguiente {
+  right: -20px;
+}
+
+.carousel-indicators.testimonios {
+  bottom: -50px;
+}
+
+.carousel-indicators.testimonios button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  opacity: 0.5;
+}
+
+.carousel-indicators.testimonios .active {
+  opacity: 1;
+}
+/* #endregion */
+
+/* #region Medias */
+@media (max-width: 992px) {
+  #hero-carousel .carousel-item .col-lg-6 {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    text-align: center;
+  }
+}
+/* #endregion */

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regio Box Party - {% block title %}{% endblock %}</title>
+
+    <!-- recursos externos -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- recursos internos -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'regioweb/css/estilo.css' %}">
+    {% block extra_css %}{% endblock %}
+
+    <link rel="shortcut icon" href="{% static 'regioweb/img/logo.png' %}">
+</head>
+<body>
+    <!-- navbar -->
+    <header id="header" class="site-header">
+        <nav id="header-nav" class="navbar navbar-expand-lg py-3 navbar-light bg-white">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'regioweb:inicio' %}">
+                    <img src="{% static 'regioweb/img/logo.png' %}" alt="Logo" height="70">
+
+                    <div class="ms-2 d-flex flex-column justify-content-center text-center">
+                        <div class="regio-box">REGIO BOX</div>
+                        <div class="party">party</div>
+                    </div>
+                </a>
+
+                <!-- toggler: SOLO visible en pantallas < lg -->
+                <button class="navbar-toggler plain-toggler d-lg-none" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-label="Toggle navigation">
+                    <span class="material-symbols-rounded" aria-hidden="true">menu</span>
+                </button>
+
+                <!-- Offcanvas (barra lateral vertical) - SOLO para pantallas < lg -->
+                <div class="offcanvas offcanvas-end d-lg-none" tabindex="-1" id="bdNavbar"
+                    aria-labelledby="bdNavbarLabel">
+                    <div class="offcanvas-header">
+                        <a class="navbar-brand" href="{% url 'regioweb:inicio' %}">
+                            <img src="{% static 'regioweb/img/logo.png' %}" alt="Logo" height="80">
+                        </a>
+                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas"
+                            aria-label="Cerrar"></button>
+                    </div>
+                    <div class="offcanvas-body d-flex flex-column">
+                        <ul id="navbar-mobile" class="navbar-nav text-uppercase flex-column">
+                            <li class="nav-item"><a class="nav-link py-2 {% if request.path == '/' %}active{% endif %}"
+                                    href="{% url 'regioweb:inicio' %}">Inicio</a></li>
+                            <li class="nav-item"><a
+                                    class="nav-link py-2 {% if 'nosotros' in request.path %}active{% endif %}"
+                                    href="{% url 'regioweb:nosotros' %}">Nosotros</a></li>
+                            <li class="nav-item"><a
+                                    class="nav-link py-2 {% if 'catalogo' in request.path %}active{% endif %}"
+                                    href="{% url 'regioweb:catalogo' %}">Catálogo</a></li>
+                            <li class="nav-item"><a
+                                    class="nav-link py-2 {% if 'contacto' in request.path %}active{% endif %}"
+                                    href="{% url 'regioweb:contacto' %}">Contacto</a></li>
+                        </ul>
+                        <div class="mt-auto user-items">
+                            <ul class="d-flex justify-content-start list-unstyled mb-0">
+                                {% if request.session.cliente_id %}
+                                <!-- Usuario logueado -->
+                                <li class="pe-3">
+                                    <a class="d-flex align-items-center {% if 'usuario' in request.path %}active{% endif %}"
+                                        href="{% url 'regioweb:usuario' %}">
+                                        <span class="material-symbols-rounded">account_circle</span>
+                                        <span class="ms-1">{{ usuario_nombre }} {{ usuario_apellido }}</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <!-- Usuario no logueado -->
+                                <li class="pe-3">
+                                    <a class="{% if 'login' in request.path or 'registro' in request.path %}active{% endif %}"
+                                        href="{% url 'regioweb:login' %}">
+                                        <span class="material-symbols-rounded">account_circle</span>
+                                    </a>
+                                </li>
+                                {% endif %}
+                                <li class="pe-3 position-relative">
+                                    <a class="{% if 'carrito' in request.path %}active{% endif %}" href="{% url 'regioweb:carrito' %}">
+                                        <span class="material-symbols-rounded">shopping_cart</span>
+                                        {% if total_cantidad_carrito > 0 %}
+                                            <span id="carrito-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                {{ total_cantidad_carrito }}
+                                            </span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menú horizontal para pantallas >= lg (oculto en móviles) -->
+                <div class="d-none d-lg-flex w-100 justify-content-between align-items-center">
+                    <ul id="navbar-desktop"
+                        class="navbar-nav mx-auto mb-2 mb-lg-0 text-uppercase d-flex flex-row align-items-center">
+                        <li class="nav-item"><a class="nav-link me-4 {% if request.path == '/' %}active{% endif %}"
+                                href="{% url 'regioweb:inicio' %}">Inicio</a></li>
+                        <li class="nav-item"><a
+                                class="nav-link me-4 {% if 'nosotros' in request.path %}active{% endif %}"
+                                href="{% url 'regioweb:nosotros' %}">Nosotros</a></li>
+                        <li class="nav-item"><a
+                                class="nav-link me-4 {% if 'catalogo' in request.path %}active{% endif %}"
+                                href="{% url 'regioweb:catalogo' %}">Catálogo</a></li>
+                        <li class="nav-item"><a
+                                class="nav-link me-4 {% if 'contacto' in request.path %}active{% endif %}"
+                                href="{% url 'regioweb:contacto' %}">Contacto</a></li>
+                    </ul>
+                    <div class="user-items d-flex align-items-center">
+                        <ul class="d-flex justify-content-end list-unstyled mb-0 ms-3">
+                            {% if request.session.cliente_id %}
+                            <!-- Usuario logueado -->
+                            <li class="pe-3">
+                                <a class="d-flex align-items-center {% if 'usuario' in request.path %}active{% endif %}"
+                                    href="{% url 'regioweb:usuario' %}">
+                                    <span class="material-symbols-rounded">account_circle</span>
+                                    <span class="ms-1">{{ usuario_nombre }} {{ usuario_apellido }}</span>
+                                </a>
+                            </li>
+                            {% else %}
+                            <!-- Usuario no logueado -->
+                            <li class="pe-3">
+                                <a class="{% if 'login' in request.path or 'registro' in request.path %}active{% endif %}"
+                                    href="{% url 'regioweb:login' %}">
+                                    <span class="material-symbols-rounded">account_circle</span>
+                                </a>
+                            </li>
+                            {% endif %}
+                            <li class="pe-3 position-relative">
+                                <a class="{% if 'carrito' in request.path %}active{% endif %}" href="{% url 'regioweb:carrito' %}">
+                                    <span class="material-symbols-rounded">shopping_cart</span>
+                                    {% if total_cantidad_carrito > 0 %}
+                                        <span id="carrito-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            {{ total_cantidad_carrito }}
+                                        </span>
+                                    {% endif %}
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- /navbar -->
+
+    <!-- contenido -->
+    <main class="container-fluid px-0">
+        {% block content %}
+        <!-- Aquí va el contenido específico de cada vista -->
+        {% endblock %}
+    </main>
+    <!-- /contenido -->
+
+    <!-- footer -->
+    <footer class="footer mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="footer-top-area">
+                    <div class="row d-flex flex-wrap justify-content-between">
+                        <div class="col-lg-3 col-sm-6 pb-3">
+                            <div class="footer-menu">
+                                <a class="navbar-brand d-flex align-items-center" href="{% url 'regioweb:inicio' %}">
+                                    <img src="{% static 'regioweb/img/logo.png' %}" alt="Logo" height="100">
+
+                                    <div class="ms-2 d-flex flex-column justify-content-center text-center">
+                                        <div class="regio-box">REGIO BOX</div>
+                                        <div class="party">party</div>
+                                    </div>
+                                </a>
+                                <p>Regio Box Party crea experiencias únicas con detalles que sorprenden y encantan en
+                                    cada ocasión.</p>
+                                <div class="social-links">
+                                    <ul class="d-flex list-unstyled">
+                                        <li><a href="https://www.facebook.com/" target="_blank"><i
+                                                    class="fab fa-facebook-f"></i></a></li>
+                                        <li><a href="https://www.instagram.com/" target="_blank"><i
+                                                    class="fab fa-instagram"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-sm-6 pb-3">
+                            <div class="footer-menu text-capitalize">
+                                <h5 class="widget-title pb-2">Enlaces rápidos</h5>
+                                <ul class="menu-list list-unstyled text-capitalize">
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:inicio' %}">Inicio</a>
+                                    </li>
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:nosotros' %}">Nosotros</a>
+                                    </li>
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:catalogo' %}">Catálogo</a>
+                                    </li>
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:contacto' %}">Contacto</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 pb-3">
+                            <div class="footer-menu">
+                                <h5 class="widget-title pb-2">Ayuda e Información</h5>
+                                <ul class="menu-list list-unstyled">
+                                    <li class="menu-item mb-1">
+                                        {% if request.session.cliente_id %}
+                                            <a href="{% url 'regioweb:usuario' %}">Mi Cuenta</a>
+                                        {% else %}
+                                            <a href="{% url 'regioweb:login' %}">Mi Cuenta</a>
+                                        {% endif %}
+                                    </li>
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:contacto' %}">Contáctanos</a>
+                                    </li>
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:aviso_privacidad' %}">Aviso de Privacidad</a>
+                                    </li>
+                                    <li class="menu-item mb-1">
+                                        <a href="{% url 'regioweb:terminos_condiciones' %}">Términos y Condiciones</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-sm-6 pb-3">
+                            <div class="footer-menu contact-item">
+                                <h5 class="widget-title text-capitalize pb-2">Contáctanos</h5>
+                                <p>¿Tienes alguna consulta o sugerencia? <a href="mailto:regioboxparty@gmail.com"
+                                        class="text-decoration-underline">regioboxparty@gmail.com</a></p>
+                                <p>¿Necesitas ayuda? Llámanos. <a href="tel:+528112345678" class="text-decoration-underline">+52 81 1234
+                                        5678</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <div class="footer-bottom mb-2">
+        <div class="container">
+            <div class="d-flex flex-wrap justify-content-center">
+                <div class="copyright">
+                    <p>© Copyright 2025 | Regio Box Party.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /footer -->
+
+    <!-- whatsApp -->
+    <div class="whatsappWrapper">
+        <!-- Botón flotante WhatsApp -->
+        <button id="btnWhatsapp" class="whatsapp-btn">
+            <i class="fab fa-whatsapp"></i>
+        </button>
+
+        <!-- Popup de chat WhatsApp -->
+        <div id="whatsappPopup" class="popup-chat">
+            <div class="popup-header">
+                <div class="header-left">
+                    <img src="{% static 'regioweb/img/logo.png' %}" alt="Regio Box Party" class="popup-logo">
+                    <div class="header-text">
+                        <span class="header-name">Regio Box Party</span>
+                        <span class="header-status">Activo ahora</span>
+                    </div>
+                </div>
+                <button id="closePopup">&times;</button>
+            </div>
+            <div class="popup-body" id="chatBody">
+                <!-- Mensaje inicial -->
+                <div class="mensaje empresa">¡Hola! Bienvenido a Regio Box Party. ¿En qué podemos ayudarte?</div>
+            </div>
+            <div class="popup-input">
+                <textarea id="mensajeWhatsapp" placeholder="Escribe tu mensaje..."></textarea>
+                <button id="enviarWhatsapp"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        <!-- /whatsApp -->
+    </div>
+
+
+    <!-- recursos js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="{% static 'regioweb/js/contador_productos.js' %}"></script>
+    <script src="{% static 'regioweb/js/whatsapp.js' %}"></script>
+</body>
+</html>

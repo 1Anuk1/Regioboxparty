@@ -1,0 +1,420 @@
+@import url('https://fonts.googleapis.com/css2?family=Lavishly+Yours&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --white-color: #fff;
+  --black-color: #3A3A40;
+  --primary-color: #E54140;
+  --secondary-color: #bb3535;
+  --accent-color: #9b2828;
+  --brown-color: #9E573A;
+  --gray-brown-color: #95847E;
+  --warm-gray-color: #B2A3A4;
+  --light-gray: #efefef;
+  --light-beige-color: #E4D7D5;
+  --green-color: #4bd17c;
+  --bg-overlay: rgba(156, 3, 3, 0.568);
+  --bg-beige: #e5ddd5;
+}
+
+/* #region General */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--black-color);
+  text-decoration: none;
+  transition: 0.3s color ease-out;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+.text-danger {
+  color: var(--secondary-color);
+}
+
+.btn-danger {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+}
+
+.btn-danger:hover {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+}
+
+.btn-outline-danger {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-color) !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+  color: var(--white-color) !important;
+  ;
+}
+
+.form-control,
+.form-select {
+  border-color: var(--warm-gray-color) !important;
+  color: var(--brown-color) !important;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--warm-gray-color) !important;
+  box-shadow: none !important;
+}
+
+.form-check-input {
+  border-color: var(--warm-gray-color);
+}
+
+.form-check-input:checked {
+  background-color: var(--warm-gray-color);
+  border-color: var(--warm-gray-color);
+}
+
+.form-check-input:focus {
+  box-shadow: none;
+  border-color: var(--warm-gray-color);
+}
+
+.banner {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  color: var(--white-color);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.banner:hover {
+  transform: scale(1.02);
+}
+
+main {
+  flex: 1 0 auto;
+}
+
+/* #endregion */
+
+/* #region Header */
+.site-header {
+  width: 100%;
+  z-index: 10;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+  background: var(--white-color, #fff);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.site-header.scrolled {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.10);
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+.regio-box {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  color: #000000;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.party {
+  font-family: 'Lavishly Yours', cursive;
+  font-weight: bold;
+  font-style: italic;
+  color: var(--primary-color);
+  font-size: 35px;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  margin-top: -1.1rem;
+  text-align: center;
+}
+
+.navbar-nav .nav-item a.nav-link {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  color: var(--black-color);
+}
+
+.navbar-nav .nav-item a.nav-link.active,
+.navbar-nav .nav-item a.nav-link:focus,
+.navbar-nav .nav-item a.nav-link:hover,
+.user-items a.active,
+.user-items a.focus,
+.user-items a.hover {
+  color: var(--primary-color);
+}
+
+.offcanvas {
+  width: 320px;
+  max-width: 65%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  z-index: 1050;
+}
+
+.navbar-toggler.d-lg-none {
+  display: inline-flex !important;
+}
+
+.navbar-toggler.plain-toggler {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 0.25rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar-toggler.plain-toggler:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.navbar-toggler.plain-toggler .material-symbols-rounded {
+  font-size: 30px;
+}
+/* #endregion Header */
+
+/* #region Footer */
+footer {
+  flex-shrink: 0;
+}
+
+.social-links i {
+  width: 20px;
+  height: 20px;
+  transition: 0.3s ease-in-out;
+  color: var(--light-beige-color);
+}
+
+.social-links i:hover {
+  color: var(--primary-color);
+}
+
+.social-links li {
+  padding-right: 30px;
+}
+
+.footer .menu-list .menu-item a {
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--black-color);
+}
+
+.footer .menu-list .menu-item a:hover {
+  color: var(--primary-color);
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--light-beige-color);
+  padding-top: 0.5rem;
+}
+
+/* #endregion */
+
+/* #region WhatsApp */
+.whatsappWrapper {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.whatsapp-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--green-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border: none;
+  animation: breathe 2s ease-in-out infinite;
+}
+
+.whatsapp-btn i {
+  color: var(--white-color);
+  font-size: 28px;
+  animation: beat 2s ease-in-out infinite;
+}
+
+.popup-chat {
+  display: none;
+  position: absolute;
+  bottom: 70px;
+  right: 30px;
+  width: 350px;
+  max-width: 90vw;
+  height: 450px;
+  background: var(--light-gray);
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--green-color);
+  color: var(--white-color);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+}
+
+.popup-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.header-text .header-name {
+  font-weight: bold;
+  display: block;
+  line-height: 1.1;
+}
+
+.header-text .header-status {
+  font-size: 12px;
+  opacity: 0.8;
+  margin: 0;
+  line-height: 1.1;
+}
+
+#closePopup {
+  background: none;
+  border: none;
+  color: var(--white-color);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.popup-body {
+  flex: 1;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--bg-beige);
+}
+
+.mensaje {
+  max-width: 70%;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 15px;
+  line-height: 1.4;
+}
+
+.mensaje.empresa {
+  background: var(--white-color);
+  align-self: flex-start;
+}
+
+.popup-input {
+  display: flex;
+  padding: 10px;
+  background: var(--light-gray);
+  gap: 8px;
+}
+
+.popup-input textarea {
+  flex: 1;
+  padding: 8px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  resize: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.popup-input button {
+  background-color: var(--green-color);
+  color: var(--white-color);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+/* #endregion WhatsApp */
+
+/* #region KeyFrames */
+@keyframes breathe {
+  0% { box-shadow: 0 0 0 0 rgba(46, 231, 114, 0.5); }
+  70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 0, 0, 0); }
+}
+
+@keyframes beat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+/* #endregion */
+
+/* #region Medias */
+@media (min-width: 1850px) {
+
+  .container,
+  .container-lg,
+  .container-md,
+  .container-sm,
+  .container-xl,
+  .container-xxl {
+    max-width: 1540px;
+  }
+}
+
+@media (max-width: 991px) {
+  .collapse.navbar-collapse.d-none.d-lg-flex {
+    display: none !important;
+  }
+
+  .cualidades .icon-cualidad {
+    flex-wrap: nowrap;
+    /* evita que los hijos se envuelvan */
+    align-items: center;
+    /* centra verticalmente icono y texto */
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-toggler.d-lg-none {
+    display: none !important;
+  }
+}
+
+/* #endregion */

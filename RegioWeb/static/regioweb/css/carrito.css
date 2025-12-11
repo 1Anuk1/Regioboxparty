@@ -1,0 +1,180 @@
+/* #region Carrito */
+.card-productos .producto-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.card-productos .producto-row:last-child {
+    border-bottom: none;
+}
+
+.card-productos .producto-img {
+    flex: 0 0 90px;
+}
+
+.card-productos .producto-img img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.card-productos .producto-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.card-productos .producto-controles {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.card-productos .fila-superior {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-productos .producto-eliminar {
+    order: -1;
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.def-number-input,
+.def-number-input.number-input {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    border: 1px solid var(--light-gray);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    width: max-content;
+}
+
+.def-number-input .cantidad,
+.def-number-input.number-input input[type=number] {
+    width: 3rem;
+    height: 2rem;
+    border: none;
+    padding: 0 0.5rem;
+    font-size: 1rem;
+    text-align: center;
+    color: var(--gray-brown-color);
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+.def-number-input.number-input input[type=number]::-webkit-inner-spin-button,
+.def-number-input.number-input input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.def-number-input.number-input button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background-color: var(--light-gray);
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+    color: var(--warm-gray-color);
+}
+/* #endregion */
+
+/* #region Detalles */
+.enlace-dir:hover{
+    text-decoration: underline;
+    color: var(--black-color);
+}
+
+.modal-title, .modal-title i, .modal-title span {
+    color: var(--secondary-color);
+}
+
+.modal-title i, .modal-title span {
+    font-size: 25px;
+}
+
+button:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-white {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border: 1px solid var(--white-color);
+}
+
+.btn-close.registro-close:hover,
+.btn-close.registro-close:focus,
+.btn-white:hover,
+.btn-white:focus {
+    background-color: var(--light-beige-color) !important;
+    border-color: var(--light-beige-color) !important;
+}
+/* #endregion */
+
+/* #region Medias */
+@media(max-width:767px){
+    .card-productos .producto-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .fila-superior {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-productos .producto-eliminar {
+        order: 0;
+    }
+
+    .card-productos .producto-img img {
+        width: 80px;
+        height: 80px;
+    }
+
+    .card-productos .producto-info {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-productos .producto-controles {
+        width: 100%;
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .def-number-input { 
+        justify-content: flex-start; 
+    }
+}
+
+@media (min-width: 1025px) {
+    .h-custom {
+        height: 100vh !important;
+    }
+}
+/* #endregion */

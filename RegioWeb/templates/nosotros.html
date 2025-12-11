@@ -1,0 +1,126 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% block title %}Nosotros{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regioweb/css/nosotros-contacto.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Quiénes somos -->
+<div class="container my-5 text-center">
+    <div class="banner text-center text-white py-3">
+        <h1 class="m-0">Quiénes Somos</h1>
+    </div>
+
+    <div class="mt-5">
+        <p>
+            En <strong>Regio Box Party</strong> somos una empresa mexicana especializada en el diseño y fabricación de
+            cajas y empaques que realzan la presentación de cada producto. Creemos que cada detalle cuenta, por eso
+            trabajamos con materiales de calidad y procesos de impresión que reflejan la identidad de cada marca. Nuestro
+            compromiso es ofrecer soluciones creativas, funcionales y estéticas, que ayuden a nuestros clientes a destacar 
+            en el mercado con empaques únicos y atractivos.
+        </p>
+        <p class="text-center">
+            Con un equipo apasionado y un enfoque centrado en el cliente, buscamos que cada caja no solo proteja un
+            producto, sino que transmita una experiencia.
+        </p>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <img src="{% static 'regioweb/img/nosotros.png' %}" class="img-fluid rounded-3 shadow" alt="Imagen">
+        </div>
+        <div class="col-md-6">
+            <h2>Misión</h2>
+            <p>
+                Generar valor a los clientes, con el diseño, desarrollo y fabricación de cajas y empaques, que
+                satisfacen sus necesidades con precios competitivos, entregas oportunas, disponibilidad para atender
+                urgencias y con el compromiso de la mejora continua de nuestro desempeño y en cumplimiento de los
+                requisitos de las partes interesadas pertinentes.
+            </p>
+
+            <h2>Visión</h2>
+            <p>
+                Ser una organización innovadora, sostenible y competitiva en el mercado regional de productos impresos,
+                así como cajas y empaques, cumpliendo con nuestros compromisos, con relaciones a largo plazo con
+                clientes, proveedores y colaboradores, buscando constantemente el beneficio de todas las partes
+                interesadas.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Valores -->
+<div class="bg-light py-5">
+    <div class="container text-center">
+        <h3 class="fw-bold mb-5">Nuestros Valores</h3>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 p-3">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h5 class="card-title mb-3">🤝 Integridad y Lealtad</h5>
+                        <p class="text-muted small">
+                            Actuamos con honestidad y compromiso, construyendo relaciones duraderas basadas en la confianza y el respeto.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 p-3">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h5 class="card-title mb-3">🧩 Trabajo en Equipo</h5>
+                        <p class="text-muted small">
+                            Fomentamos la colaboración y el respeto entre nuestros colaboradores para lograr metas comunes.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 p-3">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h5 class="card-title mb-3">💡 Creatividad e Innovación</h5>
+                        <p class="text-muted small">
+                            Buscamos constantemente nuevas ideas para ofrecer soluciones únicas en diseño y funcionalidad.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                <div class="card border-0 shadow-sm h-100 p-3">
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <h5 class="card-title mb-3">🛡️ Seguridad</h5>
+                        <p class="text-muted small">
+                            Garantizamos calidad y seguridad en cada proyecto, cuidando cada detalle con materiales confiables y un compromiso con la excelencia.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Historia -->
+<div class="container my-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <img src="{% static 'regioweb/img/nosotros2.png' %}" class="img-fluid rounded-3 shadow" alt="Imagen">
+        </div>
+        <div class="col-md-6">
+            <h3>Nuestra Historia</h3>
+            <p>
+                En el 2019 comenzamos siendo una empresa que veía un amplio mercado del área de imprenta en general,
+                desde notas de venta, hasta empaques de helados. Con el tiempo descubrimos un nicho de mercado en el
+                área de empaques de repostería, por lo cual decidimos iniciar en 2025 con <strong>Regio Box Party</strong>,
+                enfocándonos en cajas y empaques para repostería, fiestas infantiles, catering, sobres para toda ocasión.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

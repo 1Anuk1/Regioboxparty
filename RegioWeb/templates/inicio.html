@@ -1,0 +1,342 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Inicio{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regioweb/css/inicio.css' %}">
+{% endblock %}
+
+{% block content %}
+<div>
+    <!-- carrusel -->
+    <div id="hero-carousel" class="carousel slide pb-3" data-bs-ride="carousel">
+        <ol class="carousel-indicators">
+            <li data-bs-target="#hero-carousel" data-bs-slide-to="0" class="active"></li>
+            <li data-bs-target="#hero-carousel" data-bs-slide-to="1"></li>
+            <li data-bs-target="#hero-carousel" data-bs-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+            <div class="carousel-item carousel-item-inicio active">
+                <div class="container h-100">
+                    <div class="row p-5 align-items-center h-100">
+                        <div class="mx-auto col-12 col-md-8 col-lg-6 order-lg-first">
+                            <div class="banner-img-wrapper">
+                                <img class="img-fluid hero-img" src="{% static 'regioweb/img/banner_01.png' %}"
+                                    alt="Banner Regio Box Party">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 mb-0 d-flex align-items-center">
+                            <div class="text-center text-lg-start w-100">
+                                <h1 class="h1 text-danger"><b>Regio Box</b> Party</h1>
+                                <h3 class="h2 text-muted">Envolvemos tus momentos con cariño</h3>
+                                <p class="text-secondary">Diseñamos y fabricamos empaques pensados para resaltar la belleza de tus productos 
+                                    y hacer de cada entrega un detalle especial.</p>
+                                <div
+                                    class="d-flex flex-wrap gap-3 mt-4 mb-4 justify-content-center justify-content-lg-start">
+                                    <a href="{% url 'regioweb:catalogo' %}" class="btn btn-danger px-4">Ver catálogo</a>
+                                    <a href="{% url 'regioweb:contacto' %}"
+                                        class="btn btn-outline-danger px-4">Contáctanos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item carousel-item-inicio">
+                <div class="container h-100">
+                    <div class="row p-5 align-items-center h-100">
+                        <div class="mx-auto col-12 col-md-8 col-lg-6 order-lg-first">
+                            <div class="banner-img-wrapper">
+                                <img class="img-fluid hero-img" src="{% static 'regioweb/img/banner_02.png' %}"
+                                    alt="Banner Regio Box Party">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 mb-0 d-flex align-items-center">
+                            <div class="text-center text-lg-start w-100">
+                                <h1 class="h1">La calidad empieza aquí</h1>
+                                <h3 class="h2 text-muted">Para esos momentos especiales que merecen un empaque especial</h3>
+                                <p class="text-secondary">Ofrecemos cajas prácticas, resistentes y con diseños únicos, ideales para darle el toque perfecto a cada ocasión.</p>
+                                <div
+                                    class="d-flex flex-wrap gap-3 mt-4 mb-4 justify-content-center justify-content-lg-start">
+                                    <a href="{% url 'regioweb:catalogo' %}" class="btn btn-danger px-4">Ver catálogo</a>
+                                    <a href="{% url 'regioweb:contacto' %}"
+                                        class="btn btn-outline-danger px-4">Contáctanos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item carousel-item-inicio">
+                <div class="container h-100">
+                    <div class="row p-5 align-items-center h-100">
+                        <div class="mx-auto col-12 col-md-8 col-lg-6 order-lg-first">
+                            <div class="banner-img-wrapper">
+                                <img class="img-fluid hero-img" src="{% static 'regioweb/img/banner_03.png' %}"
+                                    alt="Banner Regio Box Party">
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 mb-0 d-flex align-items-center">
+                            <div class="text-center text-lg-start w-100">
+                                <h1 class="h1">Tu aliado en empaques</h1>
+                                <h3 class="h2 text-muted">Más que cajas, experiencias</h3>
+                                <p class="text-secondary">En Regio Box Party transformamos cada empaque en una experiencia memorable. 
+                                    Nos apasiona ayudarte a destacar y sorprender con cada entrega.</p>
+                                <div
+                                    class="d-flex flex-wrap gap-3 mt-4 mb-4 justify-content-center justify-content-lg-start">
+                                    <a href="{% url 'regioweb:catalogo' %}" class="btn btn-danger px-4">Ver catálogo</a>
+                                    <a href="{% url 'regioweb:contacto' %}"
+                                        class="btn btn-outline-danger px-4">Contáctanos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev text-decoration-none w-auto ps-3" href="#hero-carousel" role="button"
+            data-bs-slide="prev">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        <a class="carousel-control-next text-decoration-none w-auto pe-3" href="#hero-carousel" role="button"
+            data-bs-slide="next">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+    <!-- /carrusel -->
+
+    <!-- cualidades -->
+    <div class="cualidades mt-5 pt-5 mb-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+                    <div class="icon-cualidad d-flex">
+                        <div class="icon-cualidad-icon pe-3 pb-3">
+                            <span class="material-symbols-rounded">delivery_truck_speed</span>
+                        </div>
+                        <div class="icon-cualidad-contenido">
+                            <h4 class="card-title mb-1 text-capitalize text-dark">Entrega rápida</h4>
+                            <p class="text-muted">Garantizamos tiempos de entrega confiables para que tu negocio nunca
+                                se detenga.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+                    <div class="icon-cualidad d-flex">
+                        <div class="icon-cualidad-icon pe-3 pb-3">
+                            <span class="material-symbols-rounded">social_leaderboard</span>
+                        </div>
+                        <div class="icon-cualidad-contenido">
+                            <h4 class="card-title mb-1 text-capitalize text-dark">Calidad confiable</h4>
+                            <p class="text-muted">Cajas resistentes y listas para uso inmediato, ideales para todo tipo
+                                de productos alimenticios.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+                    <div class="icon-cualidad d-flex">
+                        <div class="icon-cualidad-icon pe-3 pb-3">
+                            <span class="material-symbols-rounded">package_2</span>
+                        </div>
+                        <div class="icon-cualidad-contenido">
+                            <h4 class="card-title mb-1 text-dark">Variedad de Tamaños</h4>
+                            <p class="text-muted">Disponemos de diferentes medidas y presentaciones para cubrir todas
+                                tus necesidades.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 pb-3 pb-lg-0">
+                    <div class="icon-cualidad d-flex">
+                        <div class="icon-cualidad-icon pe-3 pb-3">
+                            <span class="material-symbols-rounded">edit_document</span>
+                        </div>
+                        <div class="icon-cualidad-contenido">
+                            <h4 class="card-title mb-1 text-capitalize text-dark">Cotización fácil</h4>
+                            <p class="text-muted">Recibe un presupuesto rápido y claro, directamente adaptado a las
+                                necesidades de tu negocio.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /cualidades -->
+
+    <!-- los más cotizados -->
+    <div class="cotizados pt-5 pb-5">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>Los Más Cotizados</h2>
+                <a href="{% url 'regioweb:catalogo' %}" class="btn btn-danger btn-custom">Ver todos</a>
+            </div>
+
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-xl-5 g-4 justify-content-center">
+                {% for producto, total_cotizaciones in mas_cotizados %}
+                <div class="col d-flex">
+                    <div class="card producto text-center position-relative w-100 shadow-sm overflow-hidden">
+                        <div class="overlay">
+                            <button type="button" class="icon-carrito btn-agregar" data-id="{{ producto.idProducto }}">
+                                <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </div>
+
+                        <div class="p-3">
+                            <img src="{% if producto.imagen %}{{ producto.imagen.url }}{% else %}/media/productos/default.png{% endif %}"
+                                class="img-fluid producto-img" alt="{{ producto.nombre }}">
+                        </div>
+
+                        <div class="card-body pt-0">
+                            <h6 class="fw-bold mb-1">{{ producto.nombre }}</h6>
+                            <span class="text-danger fw-bold fs-6">
+                                {% if producto.precio %}
+                                    ${{ producto.precio|floatformat:2|intcomma }} MXN
+                                {% else %}
+                                    Precio no disponible
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center">No hay productos cotizados aún.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <!-- /los más cotizados -->
+
+    <!-- nosotros -->
+    <div class="inicio-nosotros mt-5 pt-5 pb-5">
+        <div class="container">
+            <div class="row d-flex align-items-center">
+                <div class="col-md-6 text-center">
+                    <div class="img-nosotros">
+                        <img src="{% static 'regioweb/img/logo.png' %}" class="img-fluid"
+                            alt="Imagen - Regio Box Party">
+                    </div>
+                </div>
+                <div class="col-md-5 offset-md-1 mt-5 mt-md-0 text-center text-md-start">
+                    <h2 class="fw-bold text-dark">Empaca tus Ideas con Estilo 📦</h2>
+                    <div class="text-muted d-flex align-items-center my-3">
+                        <p>
+                            En <strong>Regio Box Party</strong> nos especializamos en la venta de cajas y empaques
+                            ideales para repostería, regalos y todo tipo de celebraciones.<br><br>
+                            Ofrecemos productos prácticos, resistentes y con diseños modernos para que tus creaciones se
+                            vean tan bien como saben.
+                            ¡Haz que cada entrega sea inolvidable!
+                        </p>
+                    </div>
+                    <a href="{% url 'regioweb:nosotros' %}" class="btn btn-danger btn-custom mt-1">Conócenos</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /nosotros -->
+
+    <!-- testimonios -->
+    <div class="testimonios mt-5 pt-5 pb-4">
+        <div class="container py-5">
+            <h2 class="text-center mb-5">Opiniones de Nuestros Clientes</h2>
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <div class="tarjeta-testimonio p-4 p-md-5">
+                                    <i class="fa-solid fa-quote-left icon-testimonio position-absolute top-0 start-0 mt-3 ms-3"></i>
+                                    <div class="text-center mb-4">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046857.png"
+                                            alt="Icono cliente" class="avatar mb-3">
+                                        <h5 class="mb-1">Sofía Hernández</h5>
+                                        <p class="text-muted mb-0">Dueña de pastelería “Dulce Encanto”</p>
+                                    </div>
+                                    <p class="lead text-center mb-0">“Las cajas personalizadas de Regio Box Party nos
+                                        ayudaron a destacar nuestros pasteles. La calidad del material y la rapidez del
+                                        servicio fueron excelentes.”
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="carousel-item">
+                                <div class="tarjeta-testimonio p-4 p-md-5">
+                                    <i class="fa-solid fa-quote-left icon-testimonio position-absolute top-0 start-0 mt-3 ms-3"></i>
+                                    <div class="text-center mb-4">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046862.png"
+                                            alt="Icono cliente" class="avatar mb-3">
+                                        <h5 class="mb-1">Diego Ramírez</h5>
+                                        <p class="text-muted mb-0">Fundador de “Cookie House”</p>
+                                    </div>
+                                    <p class="lead text-center mb-0">“Necesitábamos empaques que reflejaran la calidad de nuestras galletas gourmet,
+                                        y ellos entendieron perfecto lo que buscábamos. ¡Recomendadísimos!”
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="carousel-item">
+                                <div class="tarjeta-testimonio p-4 p-md-5">
+                                    <i class="fa-solid fa-quote-left icon-testimonio position-absolute top-0 start-0 mt-3 ms-3"></i>
+                                    <div class="text-center mb-4">
+                                        <img src="https://cdn-icons-png.flaticon.com/512/1046/1046869.png"
+                                            alt="Icono cliente" class="avatar mb-3">
+                                        <h5 class="mb-1">Mariana López</h5>
+                                        <p class="text-muted mb-0">Emprendedora de “Detalles con Amor”</p>
+                                    </div>
+                                    <p class="lead text-center mb-0">“Sus cajas son preciosas y resistentes. Nos encantó poder personalizarlas con
+                                        nuestro logo, fue justo lo que necesitábamos para nuestros kits artesanales.”
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <button class="carousel-control-prev anterior" type="button"
+                            data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Anterior</span>
+                        </button>
+                        <button class="carousel-control-next siguiente" type="button"
+                            data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Siguiente</span>
+                        </button>
+
+                        <div class="carousel-indicators testimonios">
+                            <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="0"
+                                class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="1"
+                                aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#testimonialCarousel" data-bs-slide-to="2"
+                                aria-label="Slide 3"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /testimonios -->
+</div>
+
+<!-- Modal de confirmación llamativo -->
+<div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-hidden="true" data-bs-backdrop="static"
+    data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg text-center p-4">
+            <div class="modal-body">
+                <div class="mb-3">
+                    <span class="material-symbols-rounded">check_circle</span>
+                </div>
+                <h4 class="mb-3">¡Producto agregado!</h4>
+                <p class="mb-4">Se ha añadido al carrito correctamente.</p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a href="#" class="btn btn-danger btn-lg" id="btnIrCarrito">Ir al carrito</a>
+                    <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal"
+                        id="btnSeguir">Seguir viendo</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'regioweb/js/inicio.js' %}"></script>
+{% endblock %}

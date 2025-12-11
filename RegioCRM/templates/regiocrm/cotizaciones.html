@@ -1,0 +1,394 @@
+{% extends 'regiocrm/plantilla.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regiocrm/css/modulos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="titulo-container text-center">
+        <h2 class="titulo mt-1 mb-4">Cotizaciones</h2>
+    </div>
+
+    <div class="row g-3">
+        <!-- Agregar cotización -->
+        <div class="col-12 col-lg-3 px-2">
+            <div class="accordion" id="accordionAddCotizacion">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAdd">
+                        <button class="accordion-button {% if errores %}{% else %}collapsed{% endif %}" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapseAdd"
+                            aria-expanded="{% if errores %}true{% else %}false{% endif %}" aria-controls="collapseAdd">
+                            <i class="fas fa-plus-circle"></i>&nbsp;&nbsp; Añadir Cotización
+                        </button>
+                    </h2>
+                    <div id="collapseAdd" class="accordion-collapse collapse {% if errores %}show{% endif %}"
+                        aria-labelledby="headingAdd" data-bs-parent="#accordionAddCotizacion">
+                        <div class="accordion-body">
+                            <!-- Alerta de errores -->
+                            {% if errores %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                <strong>Errores:</strong>
+                                <ul>
+                                    {% for error in errores %}
+                                    <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                            {% endif %}
+
+                            <form method="POST" id="formCotizacion">
+                                {% csrf_token %}
+
+                                <!-- Cliente -->
+                                <div class="mb-2">
+                                    <select class="form-select" name="cliente" required>
+                                        <option value="">Selecciona un cliente</option>
+                                        {% for option in cliente_op %}
+                                        <option value="{{ option.id }}" {% if option.selected %}selected{% endif %}>
+                                            {{ option.nombre }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Tipo de entrega -->
+                                <div class="mb-2">
+                                    <select class="form-select" name="tipo_entrega" id="tipoEntrega" required>
+                                        <option value="">Selecciona el tipo de entrega</option>
+                                        {% for option in tipo_entrega_op %}
+                                        <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>
+                                            {{ option.label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Campos de domicilio -->
+                                <div id="camposDomicilio" style="display:none;">
+                                    <input type="text" name="calle" placeholder="Calle" class="form-control mb-2"
+                                        value="{{ form_data.calle|default_if_none:'' }}">
+                                    <input type="text" name="numero" placeholder="Número" class="form-control mb-2"
+                                        value="{{ form_data.numero|default_if_none:'' }}">
+                                    <input type="text" name="colonia" placeholder="Colonia" class="form-control mb-2"
+                                        value="{{ form_data.colonia|default_if_none:'' }}">
+
+                                    <select name="estado_domicilio" id="agregar_estado" class="form-select mb-2"></select>
+                                    <select name="ciudad" id="agregar_ciudad" class="form-select mb-2"></select>
+
+                                    <input type="text" name="codigo_postal" placeholder="Código Postal"
+                                        class="form-control mb-2"
+                                        value="{{ form_data.codigo_postal|default_if_none:'' }}">
+                                </div>
+
+                                <!-- Productos -->
+                                <div class="mb-2">
+                                    <label>Productos</label>
+                                    <div id="productosContainer">
+                                        <div class="productoFila mb-2 d-flex gap-1 align-items-center">
+                                            <select name="producto" class="form-select" required>
+                                                <option value="">Selecciona un producto</option>
+                                                {% for p in productos %}
+                                                <option value="{{ p.idProducto }}">{{ p.nombre }}</option>
+                                                {% endfor %}
+                                            </select>
+                                            <input type="number" name="cantidad" min="1" placeholder="Cantidad"
+                                                class="form-control" required>
+                                            <button type="button" class="btn btn-sm btn-danger btnEliminar">X</button>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-end mt-1">
+                                        <button type="button" class="btn btn-sm btn-warning" id="agregarProducto">
+                                            + Añadir producto
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Estado -->
+                                <div class="mb-2">
+                                    <select class="form-select" name="estado" required>
+                                        <option value="">Selecciona estado</option>
+                                        {% for option in estado_op %}
+                                        <option value="{{ option.value }}" {% if option.selected %}selected{% endif %}>
+                                            {{ option.label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <!-- Comentarios -->
+                                <div class="mb-2">
+                                    <textarea name="comentarios" class="form-control"
+                                        placeholder="Comentarios">{{ form_data.comentarios|default_if_none:'' }}</textarea>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary w-100 mt-2">Guardar Cotización</button>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla cotizaciones -->
+        <div class="col-12 col-lg-9 px-2">
+            <div class="mb-3 buscador-wrapper">
+                <div class="position-relative">
+                    <input type="text" id="buscadorCotizaciones" class="form-control buscador-input"
+                        placeholder="Buscar cotizaciones por cliente, origen, tipo de entrega o estado...">
+                    <i class="fas fa-search buscador-icon"></i>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered align-middle" id="tablaCotizaciones">
+                    <thead class="table-dark text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Fecha</th>
+                            <th>Tipo Entrega</th>
+                            <th>Total Estimado</th>
+                            <th>Origen</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cot in cotizaciones %}
+                        <tr>
+                            <td class="text-center fw-bold">#{{ cot.idCotizacion }}</td>
+                            <td>{{ cot.cliente.nombre }} {{ cot.cliente.apellido }}</td>
+                            <td class="text-center">{{ cot.fecha_solicitud|date:"d/m/Y H:i" }}</td>
+                            <td class="text-center">{{ cot.get_tipo_entrega_display }}</td>
+                            <td class="text-center">${{ cot.total_estimado|floatformat:2|intcomma|default:"- - -" }} MXN</td>
+                            <td class="text-center">
+                                {% if cot.origen == 'crm' %}
+                                <span class="badge bg-primary">CRM</span>
+                                {% elif cot.origen == 'web' %}
+                                <span class="badge bg-secondary">WEB</span>
+                                {% else %}
+                                <span>{{ cot.origen|default:"-" }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if cot.estado == 'pendiente' %}
+                                <span class="badge bg-inactivo">PENDIENTE</span>
+                                {% elif cot.estado == 'revisado' %}
+                                <span class="badge bg-primary">REVISADO</span>
+                                {% elif cot.estado == 'aprobado' %}
+                                <span class="badge bg-secondary">APROBADO</span>
+                                {% elif cot.estado == 'rechazado' %}
+                                <span class="badge bg-activo">RECHAZADO</span>
+                                {% else %}
+                                <span>{{ cot.estado|default:"-" }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="btn btn-sm btn-warning btn-editar" data-bs-toggle="modal"
+                                    data-bs-target="#editarModal" data-id="{{ cot.idCotizacion }}"
+                                    data-cliente="{{ cot.cliente.nombre }} {{ cot.cliente.apellido }}"
+                                    data-fecha="{{ cot.fecha_solicitud|date:'d/m/Y H:i' }}"
+                                    data-tipo-entrega="{{ cot.tipo_entrega }}" data-calle="{{ cot.calle|default:'' }}"
+                                    data-numero="{{ cot.numero|default:'' }}"
+                                    data-colonia="{{ cot.colonia|default:'' }}"
+                                    data-estado="{{ cot.estado_domicilio|default:'' }}"
+                                    data-ciudad="{{ cot.ciudad|default:'' }}"
+                                    data-codigo-postal="{{ cot.codigo_postal|default:'' }}"
+                                    data-estado-cotizacion="{{ cot.estado }}"
+                                    data-comentarios="{{ cot.comentarios|default:'' }}"
+                                    data-productos-count="{{ cot.detalle_cotizacion_set.count }}">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <a href="{% url 'regiocrm:descargar_cotizacion_pdf' cot.idCotizacion %}"
+                                    class="btn btn-sm btn-danger" target="_blank">
+                                    <i class="far fa-file-pdf"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center text-muted pt-3 pb-1">
+                                <p>No hay cotizaciones registradas.</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Paginación -->
+            {% if cotizaciones.has_other_pages %}
+            <nav class="mt-3 mb-0 pb-0">
+                <ul class="pagination justify-content-center flex-wrap gap-2 mb-0">
+                    {% if cotizaciones.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ cotizaciones.previous_page_number }}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in cotizaciones.paginator.page_range %}
+                    {% if num == cotizaciones.number %}
+                    <li class="page-item active">
+                        <span class="page-link px-3 py-2">{{ num }}</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+
+                    {% if cotizaciones.has_next %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ cotizaciones.next_page_number }}">Siguiente</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Edición -->
+<div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-dark">
+                <h5 class="modal-title" id="editarModalLabel"><i class="fas fa-edit"></i>&nbsp;&nbsp; Editar Cotización</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Container para alertas -->
+                <div id="editarAlertContainer"></div>
+
+                <form id="editarForm" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="cotizacion_id" id="editarCotizacionId">
+
+                    <div class="row">
+                        <!-- Cliente (solo lectura) -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Cliente</label>
+                            <input type="text" class="form-control" id="editarCliente" readonly>
+                        </div>
+
+                        <!-- Fecha (solo lectura) -->
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="text" class="form-control" id="editarFecha" readonly>
+                        </div>
+                    </div>
+
+                    <!-- Tipo de entrega -->
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Entrega</label>
+                        <select class="form-select" name="tipo_entrega" id="editarTipoEntrega" required>
+                            <option value="">Selecciona el tipo de entrega</option>
+                            {% for option in tipo_entrega_op %}
+                            <option value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Campos de domicilio para edición -->
+                    <div id="editarCamposDomicilio" style="display:none;">
+                        <div class="row">
+                            <div class="col-md-6 mb-2">
+                                <input type="text" name="calle" id="editarCalle" placeholder="Calle" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <input type="text" name="numero" id="editarNumero" placeholder="Número" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="text" name="colonia" id="editarColonia" placeholder="Colonia" class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <select name="estado_domicilio" id="editar_estado" class="form-select"></select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <select name="ciudad" id="editar_ciudad" class="form-select"></select>
+                            </div>
+                            <div class="col-md-12 mb-2">
+                                <input type="text" name="codigo_postal" id="editarCodigoPostal" placeholder="Código Postal" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Productos editables -->
+                    <div class="mb-3">
+                        <label class="form-label">Productos</label>
+                        <div id="editarProductosContainer">
+                            <!-- Los productos se cargarán dinámicamente aquí -->
+                            <div class="text-center py-3" id="editarProductosLoading">
+                                <div class="spinner-border spinner-border-sm" role="status"></div>
+                                Cargando productos...
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-1">
+                            <button type="button" class="btn btn-sm btn-warning" id="editarAgregarProducto">
+                                + Añadir producto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estado de la cotización -->
+                    <div class="mb-3">
+                        <label class="form-label">Estado</label>
+                        <select class="form-select" name="estado" id="editarEstadoCotizacion" required>
+                            <option value="">Selecciona estado</option>
+                            {% for option in estado_op %}
+                            <option value="{{ option.value }}">{{ option.label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Comentarios -->
+                    <div class="mb-3">
+                        <label class="form-label">Comentarios</label>
+                        <textarea name="comentarios" id="editarComentarios" class="form-control" rows="3" placeholder="Comentarios"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnGuardarEdicion"><i class="fas fa-save"></i>&nbsp; Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de éxito -->
+<div class="modal fade" id="modalExito" tabindex="-1" aria-labelledby="modalExitoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="modalExitoLabel"><i class="fas fa-check-circle"></i>&nbsp;&nbsp; Cotización Guardada</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">La cotización se ha guardado correctamente.</div>
+            <div class="modal-footer">
+                <button type="button" class="btn modal-btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if mostrar_exito %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const modalExito = new bootstrap.Modal(document.getElementById('modalExito'));
+        modalExito.show();
+    });
+</script>
+{% endif %}
+
+<!-- Scripts para los selects -->
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="{% static 'regiocrm/js/municipios.js' %}"></script>
+<script src="{% static 'regiocrm/js/select_estados.js' %}"></script>
+<script src="{% static 'regiocrm/js/cotizaciones.js' %}"></script>
+{% endblock %}

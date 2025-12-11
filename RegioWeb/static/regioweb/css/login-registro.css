@@ -1,0 +1,59 @@
+/* #region Login-Registro */
+.h-custom {
+    height: calc(100% - 73px);
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--warm-gray-color);
+}
+
+.form-label {
+    color: var(--warm-gray-color) !important;
+}
+
+a.text-body:hover,
+a.text-decoration-none:hover,
+a.link-danger:hover {
+    text-decoration: underline !important;
+}
+/* #endregion */
+
+/* #region Modal */
+.modal-title, .modal-title i {
+    color: var(--secondary-color);
+}
+
+.correo-underline {
+    text-decoration: underline;
+    color: var(--black-color);
+    cursor: text;
+}
+
+.correo-underline:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+button:focus {
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+.btn-white {
+    background-color: var(--white-color);
+    color: var(--black-color);
+    border: 1px solid var(--white-color);
+}
+
+.btn-close.registro-close:hover,
+.btn-close.registro-close:focus,
+.btn-white:hover,
+.btn-white:focus {
+    background-color: var(--light-beige-color) !important;
+    border-color: var(--light-beige-color) !important;
+}
+/* #endregion */

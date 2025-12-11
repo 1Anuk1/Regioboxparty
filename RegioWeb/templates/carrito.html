@@ -1,0 +1,219 @@
+{% extends 'plantilla.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Carrito{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regioweb/css/carrito.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <!-- Banner -->
+    <div class="container my-5 text-center">
+        <div class="banner text-center text-white py-3">
+            <h1 class="m-0">Carrito de Cotización</h1>
+        </div>
+    </div>
+
+    {% if not carrito %}
+    <div class="alert alert-info text-center" role="alert">
+        Tu carrito está vacío. Agrega productos desde el <a href="{% url 'regioweb:catalogo' %}" class="enlace-dir"
+            style="color: #055160;">catálogo</a>.
+    </div>
+    {% else %}
+    <div class="row g-4">
+        <!-- Productos del carrito -->
+        <div class="col-lg-7">
+            <div class="card card-productos">
+                <div class="card-body">
+                    <h4 class="text-center mb-3">Productos en el Carrito</h4>
+                    {% for item in carrito %}
+                    <div class="producto-row" data-producto="{{ item.producto.idProducto }}">
+                        <!-- Imagen + X -->
+                        <div class="fila-superior">
+                            <div class="producto-img">
+                                <img src="{{ item.producto.imagen|default:'/media/productos/default.png' }}"
+                                    alt="{{ item.producto.nombre }}">
+                            </div>
+                            <div class="producto-eliminar">
+                                <form method="POST"
+                                    action="{% url 'regioweb:carrito_eliminar_producto' item.producto.idProducto %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Eliminar">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- Info -->
+                        <div class="producto-info">
+                            <h6 class="mb-1 text-danger">{{ item.producto.nombre }}</h6>
+                            <p class="mb-1 text-muted small">{{ item.producto.descripcion|truncatewords:18 }}</p>
+                            <small class="text-muted">Precio unitario: ${{ item.producto.precio|floatformat:2|intcomma|default:"0.00" }} MXN</small>
+                        </div>
+                        <!-- Controles -->
+                        <div class="producto-controles">
+                            <div class="fw-bold">${{ item.precio_total|floatformat:2|intcomma|default:"0.00" }} MXN</div>
+                            <div class="def-number-input number-input" data-producto="{{ item.producto.idProducto }}">
+                                <button type="button" class="btn btn-sm btn-outline-secondary btn-menos">-</button>
+                                <input type="number" min="1" value="{{ item.cantidad }}" class="cantidad form-control"
+                                    aria-label="cantidad">
+                                <button type="button" class="btn btn-sm btn-outline-secondary btn-mas">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <div class="d-flex justify-content-center align-items-center mt-3 mb-0">
+                        <form id="formVaciarCarrito" method="POST" action="{% url 'regioweb:carrito_vaciar' %}">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalVaciarCarrito">
+                                <i class="fas fa-trash-alt"></i> Vaciar carrito
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalles -->
+        <div class="col-lg-5">
+            <div class="card p-3">
+                <h4 class="text-center mb-3">Detalles Extras</h4>
+                <form method="POST" action="{% url 'regioweb:generar_cotizacion' %}" id="formGenerarCotizacion">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tipo de entrega</label>
+                        <select name="tipo_entrega" id="tipo_entrega" class="form-select">
+                            <option value="domicilio" {{ selected_domicilio }}>Envío a domicilio (costo extra)</option>
+                            <option value="recogida" {{ selected_recogida }}>Recogida en tienda</option>
+                        </select>
+                    </div>
+
+                    <!-- Dirección (solo si es a domicilio) -->
+                    <div id="direccion-envio" class="{% if tipo_entrega != 'domicilio' %}d-none{% endif %} mb-3">
+                        {% if cliente %}
+                        {% if cliente.direcciones.exists %}
+                        <label class="form-label fw-bold">Dirección de envío</label>
+                        <select name="direccion_envio" class="form-select mb-2">
+                            {% for dir in cliente.direcciones.all %}
+                            <option value="{{ dir.idDireccion }}" {% if dir.dir_principal %}selected{% endif %}>
+                                {{ dir.calle }} {{ dir.numero }}, {{ dir.colonia }}, {{ dir.ciudad }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                        {% else %}
+                        <p class="text-danger mb-0 fs-6">
+                            No tienes direcciones registradas. <a href="{% url 'regioweb:usuario' %}#direcciones"
+                                class="enlace-dir">Agrega una primero.</a>
+                        </p>
+                        {% endif %}
+                        {% else %}
+                        <p class="mb-0 fs-6">
+                            Debes <a href="{% url 'regioweb:login' %}?next={% url 'regioweb:carrito' %}"
+                                class="enlace-dir text-danger">iniciar sesión</a> para agregar direcciones.
+                        </p>
+                        {% endif %}
+                    </div>
+
+                    {% if errores %}
+                    <div class="alert alert-danger alert-dismissible" role="alert">
+                        <strong>Error:</strong>
+                        <ul class="mb-0">
+                            {% for error in errores %}
+                            <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endif %}
+
+                    <!-- Comentarios -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Comentarios (opcional)</label>
+                        <textarea name="comentarios" id="comentarios" rows="3" class="form-control"
+                            placeholder="Indica detalles adicionales para la cotización."></textarea>
+                    </div>
+                    <hr>
+
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Total estimado</span>
+                        <span class="fw-bold">${{ total|floatformat:2|intcomma|default:"0.00" }} MXN</span>
+                    </div>
+
+                    {% if cliente %}
+                    <button type="submit" class="btn btn-danger w-100">Solicitar Cotización</button>
+                    {% else %}
+                    <p class="text-center text-danger fw-bold mb-0">
+                        Debes <a href="{% url 'regioweb:login' %}?next={% url 'regioweb:carrito' %}"
+                            class="enlace-dir text-danger">iniciar sesión</a> para solicitar la cotización.
+                    </p>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal de confirmación para vaciar el carrito -->
+<div class="modal fade" id="modalVaciarCarrito" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title d-flex align-items-center" id="vaciarCarritoModalLabel"><span class="material-symbols-rounded">remove_shopping_cart</span>&nbsp; Confirmar Eliminación</h5>
+                <button type="button" class="btn-close registro-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <h5>¿Seguro que deseas vaciar todo el carrito?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmarVaciar">Vaciar carrito</button>
+            </div>
+        </div>
+    </div> 
+</div>
+
+<!-- Modal confirmación para PDF -->
+<div class="modal fade" id="cotizacionModal" tabindex="-1" aria-labelledby="cotizacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="cotizacionModalLabel"><i class="far fa-file-pdf"></i>&nbsp; Cotización
+                    Solicitada</h5>
+                <button type="button" class="btn-close registro-close" data-bs-dismiss="modal"
+                    aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <h5><strong>¡Tu cotización se solicitó correctamente!</strong></h5>
+                ¿Deseas descargar el PDF?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cerrar</button>
+                <a id="btnDescargarPdf" href="#" class="btn btn-danger">Descargar PDF</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if modal_cotizacion and cotizacion_generada %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // establecer href del botón de descarga
+        document.getElementById('btnDescargarPdf').href =
+            "{% url 'regioweb:descargar_cotizacion_pdf' cotizacion_generada.idCotizacion %}";
+        var myModal = new bootstrap.Modal(document.getElementById('cotizacionModal'));
+        myModal.show();
+    });
+</script>
+{% endif %}
+
+<script>
+    const urlActualizarCarrito = "{% url 'regioweb:carrito_actualizar_producto' 0 0 %}";
+</script>
+<script src="{% static 'regioweb/js/carrito.js' %}"></script>
+
+{% endblock %}

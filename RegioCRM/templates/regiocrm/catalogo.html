@@ -1,0 +1,424 @@
+{% extends 'regiocrm/plantilla.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'regiocrm/css/modulos.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="titulo-container text-center">
+        <h2 class="titulo mt-1 mb-4">Catálogo</h2>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-3">
+            <!-- CATEGORÍAS -->
+            <div class="accordion" id="accordionCategorias">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button {% if acordeon_abierto != 'categorias' %}collapsed{% endif %}"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseCategorias">
+                            <i class="fa fa-list me-2"></i>&nbsp;&nbsp; Gestión de Categorías
+                        </button>
+                    </h2>
+                    <div id="collapseCategorias" class="accordion-collapse collapse {% if acordeon_abierto == 'categorias' %}show{% endif %}">
+                        <div class="accordion-body">
+                            <!-- Alerta de errores -->
+                            {% if errores_cat %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                <strong>Errores:</strong>
+                                <ul class="mb-0">{% for error in errores_cat %}<li>{{ error }}</li>{% endfor %}</ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endif %}
+
+                            <ul class="list-group mb-3">
+                                {% for c in categorias %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>{{ c.nombre }}</span>
+                                    <div class="d-flex gap-1">
+                                        <button type="button" class="btn btn-sm btn-warning btn-editar-cat"
+                                            data-id="{{ c.idCategoria }}" data-nombre="{{ c.nombre }}"><i
+                                                class="fas fa-pen-to-square"></i></button>
+                                        <form method="post" class="d-inline form-eliminar-cat" action="{% url 'regiocrm:catalogo_categorias_crm' %}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="tipo" value="eliminar_categoria">
+                                            <input type="hidden" name="idCategoria" value="{{ c.idCategoria }}">
+                                            <button type="button" class="btn btn-sm btn-danger btn-eliminar-cat"><i
+                                                    class="fas fa-eraser"></i></button>
+                                        </form>
+                                    </div>
+                                </li>
+                                {% empty %}
+                                <li class="list-group-item text-muted">No hay categorías registradas.</li>
+                                {% endfor %}
+                            </ul>
+                            <hr>
+                            <form method="post" id="formCategoria" action="{% url 'regiocrm:catalogo_categorias_crm' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="tipo" value="categoria">
+                                <input type="hidden" name="idCategoria" id="idCategoria">
+                                <div class="mb-2">
+                                    <input type="text" name="nombre" id="nombreCategoria" class="form-control"
+                                        placeholder="Nombre de la categoría" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary mt-2 w-100">Guardar Categoría</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCTOS -->
+            <div class="accordion mt-3" id="acordeonProductos">
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button {% if acordeon_abierto != 'productos' %}collapsed{% endif %}" 
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapseProductos">
+                            <i class="fa fa-box me-2"></i>&nbsp;&nbsp; Gestión de Productos
+                        </button>
+                    </h2>
+                    <div id="collapseProductos" class="accordion-collapse collapse {% if acordeon_abierto == 'productos' %}show{% endif %}">
+                        <div class="accordion-body">
+                            <!-- Alerta de errores -->
+                            {% if errores_prod %}
+                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                <strong>Errores:</strong>
+                                <ul class="mb-0">{% for error in errores_prod %}<li>{{ error }}</li>{% endfor %}</ul>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            {% endif %}
+
+                            <form method="post" enctype="multipart/form-data" id="formProducto" action="{% url 'regiocrm:catalogo_productos_crm' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="tipo" value="producto">
+                                <input type="hidden" name="idProducto" id="idProducto">
+
+                                <!-- NUEVO CAMPO: ID Producto como string -->
+                                <div class="mb-2">
+                                    <input type="text" name="idProducto_string" id="prodIdProducto" class="form-control" 
+                                        placeholder="Clave del producto (código único)" maxlength="50" required>
+                                    <small class="text-muted">Ingresa un código único para identificar el producto (ej: PROD-001, SKU-123).</small>
+                                </div>
+
+                                <div class="mb-2">
+                                    <input type="text" name="nombre" id="prodNombre" class="form-control" placeholder="Nombre del producto" required>
+                                </div>
+
+                                <div class="mb-2">
+                                    <select name="categoria" id="prodCategoria" class="form-select" required>
+                                        <option value="">Selecciona una categoría</option>
+                                        {% for c in categorias %}
+                                            {% if c.activo %}
+                                                <option value="{{ c.idCategoria }}">{{ c.nombre }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="mb-2">
+                                    <textarea name="descripcion" id="prodDescripcion" class="form-control" placeholder="Descripción" rows="3" required></textarea>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="number" step="0.01" name="precio" id="prodPrecio" class="form-control" placeholder="Precio" required>
+                                </div>
+                                <div class="mb-2">
+                                    <input type="file" name="imagen" id="prodImagen" class="form-control" accept="image/*" required>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-end mb-2 custom-switch-wrapper">
+                                    <label class="form-check-label me-3 mb-0" for="prodPublicado">Publicar en Sitio Web</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input custom-switch" name="activo" type="checkbox" id="prodPublicado" checked>
+                                    </div>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-primary mt-2">Guardar Producto</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GRID DE PRODUCTOS -->
+        <div class="col-12 col-lg-9">
+            <div class="mb-3 buscador-wrapper">
+                <div class="position-relative">
+                    <input type="text" id="buscadorProductos" class="form-control buscador-input"
+                        placeholder="Buscar productos por nombre, categoría o ID..." value="{{ search|default:'' }}">
+                    <i class="fas fa-search buscador-icon"></i>
+                </div>
+                <p class="small text-muted fst-italic">Presiona Enter para realizar la búsqueda.</p>
+            </div>
+            
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
+                {% for p in productos %}
+                <div class="col producto-item">
+                    <div class="card h-100">
+                        {% if p.imagen %}
+                            <div class="img-container-prod">
+                                <img src="{{ p.imagen.url }}">
+                            </div>
+                        {% else %}
+                            <div class="img-placeholder-prod">
+                                <i class="fa fa-box"></i>
+                            </div>
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">{{ p.nombre }}</h5>
+                                {% if p.activo %}
+                                    <span class="badge bg-activo">PUBLICADO</span>
+                                {% else %}
+                                    <span class="badge bg-inactivo">NO PUBLICADO</span>
+                                {% endif %}
+                            </div>
+                            <!-- NUEVO: Mostrar ID del Producto -->
+                            <div class="mb-2">
+                                <small class="text-muted fw-bold">Clave: {{ p.idProducto }}</small>
+                            </div>
+                            <p class="card-text text-truncate">{{ p.descripcion }}</p>
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                <div>
+                                    <small class="text-muted">{{ p.categoria.nombre }}</small><br>
+                                    <span class="fw-bold">${{ p.precio|floatformat:2|intcomma|default:"0.00" }} MXN</span>
+                                </div>
+                                <div class="d-flex gap-1">
+                                    <button type="button" class="btn btn-sm btn-warning btn-editar-prod" 
+                                            data-id="{{ p.idProducto }}"
+                                            data-idproducto="{{ p.idProducto }}"
+                                            data-nombre="{{ p.nombre }}"
+                                            data-categoria="{{ p.categoria.idCategoria }}"
+                                            data-descripcion="{{ p.descripcion }}"
+                                            data-precio="{{ p.precio }}"
+                                            data-activo="{{ p.activo }}"
+                                            {% if p.imagen %}data-imagen="{{ p.imagen.url }}"{% else %}data-imagen=""{% endif %}>
+                                        <i class="fas fa-pen-to-square"></i>
+                                    </button>
+                                    <form method="post" class="d-inline form-accion-prod" action="{% url 'regiocrm:catalogo_productos_crm' %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="tipo" value="cambiar_estado_producto">
+                                        <input type="hidden" name="idProducto" value="{{ p.idProducto }}">
+                                        <button type="button" class="btn btn-sm btn-accion-prod {% if p.activo %}btn-danger{% else %}btn-success{% endif %}" data-activo="{{ p.activo }}">
+                                            {% if p.activo %}<i class="fas fa-eraser"></i>{% else %}<i class="fas fa-check-double"></i>{% endif %}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 col-md-6">
+                    <div class="d-flex flex-column align-items-center my-4">
+                        <i class="fas fa-box-open fa-3x text-muted mb-2"></i>
+                        <p class="text-muted fs-5 mb-0">No hay productos.</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Paginación -->
+            <nav class="mt-3 mb-0 pb-0">
+                <ul class="pagination justify-content-center flex-wrap gap-2 mb-0">
+                    {% if productos.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ productos.previous_page_number }}">Anterior</a>
+                    </li>
+                    {% endif %}
+
+                    {% for num in productos.paginator.page_range %}
+                    <li class="page-item {% if productos.number == num %}active{% endif %}">
+                        <a class="page-link px-3 py-2" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                    {% endfor %}
+
+                    {% if productos.has_next %}
+                    <li class="page-item">
+                        <a class="page-link px-3 py-2" href="?page={{ productos.next_page_number }}">Siguiente</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<!-- CATEGORIAS -->
+<!-- Modal para editar categoría -->
+<div class="modal fade" id="editarCategoriaModal" tabindex="-1" aria-labelledby="editarCategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="formEditarCategoria" method="post" action="{% url 'regiocrm:catalogo_categorias_crm' %}">
+                <div class="modal-header bg-white text-black">
+                    <h5 class="modal-title" id="editarCategoriaLabel"><i class="fas fa-pen"></i>&nbsp;&nbsp; Editar Categoría</h5>
+                    <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor para errores -->
+                    <div id="editarErrores" class="alert alert-danger d-none" role="alert">
+                        <strong>Errores:</strong>
+                        <ul id="editarErroresList" class="mb-0"></ul>
+                    </div>
+
+                    {% csrf_token %}
+                    <input type="hidden" name="tipo" value="categoria">
+                    <input type="hidden" name="idCategoria" id="editar_idCategoria" value="">
+                    <div class="mb-2">
+                        <label for="editar_nombre" class="form-label">Nombre</label>
+                        <input type="text" name="nombre" id="editar_nombre" class="form-control" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn modal-btn-danger" id="editarGuardarBtn"><i class="fas fa-save"></i>&nbsp; Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de reactivar categoría -->
+<div class="modal fade" id="reactivarCategoriaModal" tabindex="-1" aria-labelledby="reactivarCategoriaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="reactivarCategoriaLabel"><i class="fas fa-repeat"></i>&nbsp;&nbsp; Reactivar Categoría</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="reactivarMensaje">¿Deseas reactivar la categoría?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn modal-btn-danger" id="reactivarConfirmBtn">Reactivar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PRODUCTOS -->
+<!-- Modal para editar producto -->
+<div class="modal fade" id="editarProductoModal" tabindex="-1" aria-labelledby="editarProductoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="formEditarProducto" method="post" enctype="multipart/form-data" action="{% url 'regiocrm:catalogo_productos_crm' %}">
+                <div class="modal-header bg-white text-black">
+                    <h5 class="modal-title" id="editarProductoLabel">
+                        <i class="fas fa-pen"></i>&nbsp;&nbsp; Editar Producto
+                    </h5>
+                    <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Contenedor para errores -->
+                    <div id="editarErroresProd" class="alert alert-danger d-none" role="alert">
+                        <strong>Errores:</strong>
+                        <ul id="editarErroresListProd" class="mb-0"></ul>
+                    </div>
+
+                    {% csrf_token %}
+                    <input type="hidden" name="tipo" value="producto">
+                    <input type="hidden" name="idProducto" id="editar_idProducto">
+
+                    <!-- NUEVO CAMPO: ID Producto como string en edición -->
+                    <div class="mb-2">
+                        <label for="editar_prodIdProducto" class="form-label">Clave del Producto</label>
+                        <input type="text" name="idProducto_string" id="editar_prodIdProducto" class="form-control" 
+                            placeholder="ID del Producto (código único)" maxlength="50" required>
+                        <small class="text-muted">Código único para identificar el producto.</small>
+                    </div>
+
+                    <div class="mb-2">
+                        <input type="text" name="nombre" id="editar_prodNombre" class="form-control" placeholder="Nombre del producto" required>
+                    </div>
+                    <div class="mb-2">
+                        <select name="categoria" id="editar_prodCategoria" class="form-select" required>
+                            <option value="">Selecciona una categoría</option>
+                            {% for c in categorias %}
+                                {% if c.activo %}
+                                    <option value="{{ c.idCategoria }}">{{ c.nombre }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-2">
+                        <textarea name="descripcion" id="editar_prodDescripcion" class="form-control" placeholder="Descripción" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <input type="number" step="0.01" name="precio" id="editar_prodPrecio" class="form-control" placeholder="Precio" required>
+                    </div>
+                    <div class="mb-2">
+                        <input type="file" name="imagen" id="editar_prodImagen" class="form-control" accept="image/*">
+                        <small class="text-muted">Deja vacío si no quieres cambiar la imagen.</small>
+                    </div>
+                    <div class="form-check form-switch d-flex justify-content-end align-items-center mb-2 custom-switch-wrapper">
+                        <label class="form-check-label mb-0 me-2" for="editar_prodPublicado">Publicar en Sitio Web</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input custom-switch" type="checkbox" name="activo" id="editar_prodPublicado">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn modal-btn-danger" id="editarGuardarProdBtn"><i class="fas fa-save"></i>&nbsp; Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- COMUNES -->
+<!-- Modal de éxito para crear/editar -->
+<div class="modal fade" id="accionModal" tabindex="-1" aria-labelledby="accionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="accionModalLabel"><i id="accionIcon" class="fas fa-check-double"></i>&nbsp;&nbsp;
+                    <span id="accionTitulo">Acción Completada</span>
+                </h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="accionMensaje">La acción se ha realizado correctamente.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn modal-btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="eliminarModal" tabindex="-1" aria-labelledby="eliminarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-black">
+                <h5 class="modal-title" id="eliminarModalLabel"><i class="fas fa-gears"></i>&nbsp; Confirmar Acción</h5>
+                <button type="button" class="btn-close modal-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+                <p id="eliminarMensaje">¿Estás seguro que deseas realizar esta acción?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn modal-btn-danger" id="eliminarConfirmBtn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if categoria_guardada %}
+<div id="guardadoFlags"
+     data-categoria-guardada="True"
+     data-mensaje-guardado="{{ mensaje_guardado }}"
+     data-tipo="{% if idCategoria %}editar{% else %}crear{% endif %}">
+</div>
+{% endif %}
+<script src="{% static 'regiocrm/js/catalogo.js' %}"></script>
+{% endblock %}

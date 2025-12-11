@@ -1,0 +1,76 @@
+.banner {
+  background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+  color: var(--white-color);
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.banner:hover {
+  transform: scale(1.02);
+}
+
+/* #region Menú */
+.nav-link {
+  background-color: var(--white-color);
+  color: var(--black-color);
+}
+
+.nav-link:hover {
+  background-color: var(--white-color);
+  color: var(--secondary-color);
+}
+
+.nav-link.active {
+  background-color: var(--secondary-color) !important;
+  color: var(--white-color) !important;
+}
+
+/* #endregion */
+
+button:focus {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.text-muted,
+.form-label {
+  color: var(--gray-brown-color) !important;
+}
+
+.text-value {
+  color: var(--brown-color);
+}
+
+.btn-white {
+  background-color: var(--white-color);
+  color: var(--black-color);
+  border: 1px solid var(--white-color);
+}
+
+.btn-white:hover,
+.btn-white:focus,
+.btn-close.direccion-close:hover,
+.btn-close.direccion-close:focus {
+  background-color: var(--light-beige-color) !important;
+  border-color: var(--light-beige-color) !important;
+}
+
+.modal-title {
+  color: var(--secondary-color);
+}
+
+.modal-title span {
+  font-size: 30px;
+  color: var(--secondary-color);
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: var(--bg-overlay);
+  color: var(--white-color);
+  font-weight: bold;
+}

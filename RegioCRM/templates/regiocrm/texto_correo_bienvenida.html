@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Bienvenido a Regio Box Party</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height:1.5; color:#3A3A40;">
+    <h2 style="color:#b22222;">Hola {{ cliente.nombre }} {{ cliente.apellido }},</h2>
+    <p>¡Bienvenido(a) a <strong>Regio Box Party</strong>! Tu cuenta ha sido creada desde nuestro sistema.</p>
+    <p><strong>Correo:</strong> {{ cliente.correo }}</p>
+    <p><strong>Contraseña temporal:</strong> {{ password }}</p>
+    <p>Puedes iniciar sesión haciendo clic en el siguiente botón:</p>
+    <p style="margin:20px 0;">
+        <a href="{{ login_url }}" style="display:inline-block; background-color:#bb3535; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">
+            Iniciar Sesión
+        </a>
+    </p>
+    <p>Te recomendamos cambiar la contraseña después de iniciar sesión para mayor seguridad.</p>
+    <p style="margin-top:30px;">Gracias,<br><strong>Regio Box Party.</strong></p>
+    <hr style="border:none; border-top:1px solid #e7876a; margin-top:40px;">
+    <p style="font-size:12px; color:#9E573A;">Si no solicitaste esta cuenta, por favor ignora este correo.</p>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Recuperación de contraseña</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height:1.5;">
+    <h2>Hola {{ cliente.nombre }} {{ cliente.apellido }},</h2>
+    <p>Hemos recibido una solicitud para restablecer tu contraseña.</p>
+    <p>Haz clic en el siguiente enlace para cambiar tu contraseña:</p>
+    <p style="margin:20px 0;">
+        <a href="{{ reset_link }}" style="background-color:#bb3535; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;">Restablecer contraseña</a>
+    </p>
+    <p>Si no solicitaste el cambio, puedes ignorar este correo.</p>
+    <p>Gracias,<br>Regio Box Party.</p>
+</body>
+</html>
