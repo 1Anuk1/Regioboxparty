@@ -1,0 +1,1 @@
+web: RegioBoxPortal.wsgi
