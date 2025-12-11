@@ -1,0 +1,17 @@
+Metadata-Version: 2.4
+Name: MathLab
+Version: 0.1.0
+Summary: A Python library for math and number operations.
+Home-page: https://github.com/yourusername/MathLab
+Author: Eldar Eliyev
+Author-email: eldar2005matrix@gmail.com
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.8
+Dynamic: author
+Dynamic: author-email
+Dynamic: classifier
+Dynamic: home-page
+Dynamic: requires-python
+Dynamic: summary

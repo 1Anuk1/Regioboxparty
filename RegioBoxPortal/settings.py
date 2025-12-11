@@ -101,9 +101,9 @@ if DATABASE_URL:
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.environ.get('DB_NAME', 'REGIOBOX'),
-                'USER': os.environ.get('DB_USER', 'postgres'),
-                'PASSWORD': os.environ.get('DB_PASSWORD', 'kushmoradaxd'),
+                'NAME': os.environ.get('DB_NAME', 'regiobox'),
+                'USER': os.environ.get('DB_USER', "postgres"),
+                'PASSWORD': os.environ.get('DB_PASSWORD', "1kushmoradaxd"),
                 'HOST': os.environ.get('DB_HOST', 'localhost'),
                 'PORT': os.environ.get('DB_PORT', '5432'),
             }
@@ -113,9 +113,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', 'REGIOBOX'),
-            'USER': os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', 'kushmoradaxd'),
+            'NAME': os.environ.get('DB_NAME', 'regiobox'),
+            'USER': os.environ.get('DB_USER', "postgres"),
+            'PASSWORD': os.environ.get('DB_PASSWORD', "1kushmoradaxd"),
             'HOST': os.environ.get('DB_HOST', 'localhost'),
             'PORT': os.environ.get('DB_PORT', '5432'),
         }
