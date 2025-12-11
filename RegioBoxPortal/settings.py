@@ -97,31 +97,29 @@ if DATABASE_URL:
             'default': dj_database_url.parse(DATABASE_URL, conn_max_age=600)
         }
     except Exception:
-        # dj-database-url not installed; fall back to default minimal config below
+        # Fallback si dj-database-url no está instalado
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
                 'NAME': os.environ.get('DB_NAME', 'REGIOBOX'),
                 'USER': os.environ.get('DB_USER', 'postgres'),
-                'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+                'PASSWORD': os.environ.get('DB_PASSWORD', 'kushmoradaxd'),
                 'HOST': os.environ.get('DB_HOST', 'localhost'),
                 'PORT': os.environ.get('DB_PORT', '5432'),
             }
         }
 else:
-    # No DATABASE_URL: read individual env vars (useful for local/postgres setups)
+    # Configuración normal (local)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': os.environ.get('DB_NAME', 'REGIOBOX'),
             'USER': os.environ.get('DB_USER', 'postgres'),
-            'PASSWORD': os.environ.get('DB_PASSWORD', ''),
+            'PASSWORD': os.environ.get('DB_PASSWORD', 'kushmoradaxd'),
             'HOST': os.environ.get('DB_HOST', 'localhost'),
             'PORT': os.environ.get('DB_PORT', '5432'),
         }
     }
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
